@@ -1,0 +1,33 @@
+<div>
+<!-- <div *ngFor ="let flight in flightDetails">
+
+    <div *ngFor="let detail in flight">
+        <label for="">{{detail}}</label>
+    </div>
+</div> -->
+
+<div *ngFor="let flight of flightDetails">
+    <div>
+      <p><strong>Flight No:</strong> {{ flight.flightNo }}</p>
+      <p><strong>Flight Name:</strong> {{ flight.flightName }}</p>
+      <p><strong>From:</strong> {{ flight.from }}</p>
+      <p><strong>To:</strong> {{ flight.to }}</p>
+      <p><strong>Departure Time:</strong> {{ flight.departureTime }}</p>
+      <p><strong>Arrival Time:</strong> {{ flight.arrivalTime }}</p>
+      <p><strong>Duration:</strong> {{ flight.duration }}</p>
+      <p><strong>Price:</strong> {{ flight.price }}</p>
+      <a routerLink="/seat">Book now</a>
+    </div>
+    <hr>
+  </div>
+  
+<!-- flightDetails = {
+    "Flight No": "VE-123",
+    "Flight Name": "Air India",
+    "From": "Delhi",
+    "To": "Mumbai",
+    "Departure Time": "10:00 AM",
+    "Arrival Time": "12:00 PM",
+    "Duration": "2 Hours",
+    "Price": "Rs. 5000"
+  }; -->
