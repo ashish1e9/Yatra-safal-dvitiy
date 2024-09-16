@@ -1,0 +1,17 @@
+<button routerLink="/flight/add">Add Flight</button>
+<br><br>
+<div *ngFor="let flight of flightData">
+    Flight No: {{ flight.flightNo }}
+    totalSeats: {{flight.totalSeats }}
+      baseFare: {{flight.baseFare }}
+      source: {{flight.sourceCity }}
+      destination: {{flight.destinationCity }}
+      fromDate: {{flight.fromDate }}
+      toDate: {{flight.toDate }}
+      departureTime: {{flight.departureTime }}
+      arrivalTime: {{flight.arrivalTime }}
+      Status: {{flight.status}}
+    <button [id]="flight.flightId" routerLink="/schedule/edit" >Edit Schedule</button>
+    <button [id]="flight.flightId" >Cancel Schedule</button>
+      <hr>
+</div>
