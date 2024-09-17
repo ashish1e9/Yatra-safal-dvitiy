@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+<<<<<<< HEAD
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { FlightSearchComponent } from './flight-search/flight-search.component';
@@ -23,6 +24,20 @@ const routes: Routes = [
 ];
 
 
+=======
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { EditScheduleComponent } from './edit-schedule/edit-schedule.component';
+import { AddFlightComponent } from './add-flight/add-flight.component';
+import { AdminLoginComponent } from './admin-login/admin-login.component';
+
+const routes: Routes = [
+  {path: "dashboard", component: AdminDashboardComponent},
+  {path: "", component: AdminLoginComponent},
+  {path: "flight/add", component: AddFlightComponent},
+  {path: "schedule/edit", component: EditScheduleComponent},
+];
+
+>>>>>>> origin/admin
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
