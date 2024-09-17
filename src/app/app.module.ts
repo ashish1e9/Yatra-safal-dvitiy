@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-<<<<<<< HEAD
 import { NavbarComponent } from './navbar/navbar.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
@@ -15,17 +14,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { SeatSelectionComponent } from './seat-selection/seat-selection.component';
-=======
 import { AdminLoginComponent } from './admin-login/admin-login.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { AddFlightComponent } from './add-flight/add-flight.component';
 import { EditScheduleComponent } from './edit-schedule/edit-schedule.component';
->>>>>>> origin/admin
 
 @NgModule({
   declarations: [
     AppComponent,
-<<<<<<< HEAD
     NavbarComponent,
     HeaderComponent,
     FooterComponent,
@@ -34,14 +30,7 @@ import { EditScheduleComponent } from './edit-schedule/edit-schedule.component';
     FlightSearchComponent,
     SignupComponent,
     LandingPageComponent,
-    SeatSelectionComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-=======
+    SeatSelectionComponent,
     AdminLoginComponent,
     AdminDashboardComponent,
     AddFlightComponent,
@@ -49,8 +38,9 @@ import { EditScheduleComponent } from './edit-schedule/edit-schedule.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
->>>>>>> origin/admin
+    AppRoutingModule,
+    ReactiveFormsModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

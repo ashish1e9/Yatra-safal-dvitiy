@@ -20,27 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-<<<<<<< HEAD
   it(`should have as title 'airline-reservation-frontend'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app.title).toEqual('airline-reservation-frontend');
-=======
-  it(`should have as title 'airline-reservation-admin'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('airline-reservation-admin');
->>>>>>> origin/admin
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-<<<<<<< HEAD
     expect(compiled.querySelector('.content span')?.textContent).toContain('airline-reservation-frontend app is running!');
-=======
-    expect(compiled.querySelector('.content span')?.textContent).toContain('airline-reservation-admin app is running!');
->>>>>>> origin/admin
   });
 });
