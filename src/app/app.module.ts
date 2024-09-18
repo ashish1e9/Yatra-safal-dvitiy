@@ -19,6 +19,7 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 import { AddFlightComponent } from './add-flight/add-flight.component';
 import { EditScheduleComponent } from './edit-schedule/edit-schedule.component';
 import { SelectPassengerComponent } from './select-passenger/select-passenger.component';
+import { FlightReturnComponent } from './flight-return/flight-return.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { SelectPassengerComponent } from './select-passenger/select-passenger.co
     AdminDashboardComponent,
     AddFlightComponent,
     EditScheduleComponent,
-    SelectPassengerComponent
+    SelectPassengerComponent,
+    FlightReturnComponent
   ],
   imports: [
     BrowserModule,

@@ -14,12 +14,14 @@ import { EditScheduleComponent } from './edit-schedule/edit-schedule.component';
 import { AddFlightComponent } from './add-flight/add-flight.component';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
 import {SelectPassengerComponent} from './select-passenger/select-passenger.component'
+import { FlightReturnComponent } from './flight-return/flight-return.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'flight/search', component: FlightSearchComponent },
+  { path: 'flight/return', component: FlightReturnComponent },
   { path: 'flight/card', component: FlightCardComponent },
   { path: 'navbar', component: NavbarComponent },
   { path: 'header', component: HeaderComponent },
