@@ -10,7 +10,7 @@ import { FlightCardComponent } from './flight-card/flight-card.component';
 import { LoginComponent } from './login/login.component';
 import { FlightSearchComponent } from './flight-search/flight-search.component';
 import { SignupComponent } from './signup/signup.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { SeatSelectionComponent } from './seat-selection/seat-selection.component';
@@ -21,6 +21,8 @@ import { EditScheduleComponent } from './edit-schedule/edit-schedule.component';
 import { BookingSummaryComponent } from './booking-summary/booking-summary.component';
 import { PaymentComponent } from './payment/payment.component';
 import { TimeFormatPipe } from './time-format.pipe';
+import { SelectPassengerComponent } from './select-passenger/select-passenger.component';
+import { FlightReturnComponent } from './flight-return/flight-return.component';
 
 @NgModule({
   declarations: [
@@ -40,13 +42,16 @@ import { TimeFormatPipe } from './time-format.pipe';
     EditScheduleComponent,
     BookingSummaryComponent,
     PaymentComponent,
-    TimeFormatPipe
+    TimeFormatPipe,
+    SelectPassengerComponent,
+    FlightReturnComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

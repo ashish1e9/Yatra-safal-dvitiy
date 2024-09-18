@@ -15,12 +15,15 @@ import { AddFlightComponent } from './add-flight/add-flight.component';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
 import { BookingSummaryComponent } from './booking-summary/booking-summary.component';
 import { PaymentComponent } from './payment/payment.component';
+import {SelectPassengerComponent} from './select-passenger/select-passenger.component'
+import { FlightReturnComponent } from './flight-return/flight-return.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'flight/search', component: FlightSearchComponent },
+  { path: 'flight/return', component: FlightReturnComponent },
   { path: 'flight/card', component: FlightCardComponent },
   { path: 'navbar', component: NavbarComponent },
   { path: 'header', component: HeaderComponent },
@@ -32,6 +35,7 @@ const routes: Routes = [
   {path: "schedule/edit", component: EditScheduleComponent},
   {path: "booking/summary", component: BookingSummaryComponent},
   {path: "booking/payment", component: PaymentComponent},
+  {path: 'seat/addPassenger', component: SelectPassengerComponent}
 ];
 
 @NgModule({
