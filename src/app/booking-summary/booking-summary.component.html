@@ -1,0 +1,98 @@
+<h3 class="text-center bg-primary p-3 text-white">Booking Summary</h3>
+<div class="container-fluid d-flex">
+  <!-- Left Half: Flight Summary and Traveller Summary -->
+  <div class="d-flex flex-column flex-fill border-end p-3">
+    <div class="mb-3">
+      <h4>Flight Summary</h4>
+      <p>
+        <b>{{ flightSummary[0].flightNo }}</b>
+        {{ flightSummary[0].scheduleDay }}
+      </p>
+
+      <div class="container-fluid d-flex p-0 justify-content-between">
+        <p class="d-flex flex-column">
+          <b>From: </b>{{ flightSummary[0].sourceCity }} at
+          {{
+              flightSummary[0].departureTime | timeFormat
+          }}
+        </p>
+        <p class="d-flex flex-column">
+          <b>To: </b>{{ flightSummary[0].destinationCity }} at
+          {{
+              flightSummary[0].arrivalTime | timeFormat
+          }}
+        </p>
+      </div>
+    </div>
+    <div>
+      <div class="w-100 d-flex justify-content-between align-items-center">
+        <h4 class="m-0">Travellers Summary</h4>
+        <button type="button" class="btn btn-outline-primary m-1" ng-click="">
+          Edit
+        </button>
+      </div>
+      <table class="table table-striped mb-0 mt-3 w-100 text-center">
+        <thead>
+          <tr class="table-primary">
+            <th>Sr. No.</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Passport Number</th>
+            <th>Seat Number</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let traveller of travellers; index as i">
+            <td>{{ i + 1 }}</td>
+            <td>{{ traveller.firstName }} {{ traveller.lastName }}</td>
+            <td>{{ traveller.email }}</td>
+            <td>{{ genderToString(traveller.gender) }}</td>
+            <td>{{ traveller.passportNo }}</td>
+            <td>{{ traveller.seat.seatNo }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="d-flex align-items-center justify-content-center mt-5">
+      <button class="btn btn-primary w-100">Pay Now</button>
+    </div>
+  </div>
+
+  <!-- Right Half: Fare Summary and Pay Button -->
+  <div class="d-flex flex-column flex-fill p-3">
+    <div class="sticky-top">
+      <div class="mb-3 h-100 flex-column justify-content-between">
+        <h4>Fare Summary</h4>
+        <!-- <div class="flex-column">
+        <h5>Base Charges: {{flightSummary.baseFare}} </h5>
+        <h5>Extra Seat Charges: {{seatCharges}} </h5>
+        <h5>GST: {{tax}} </h5>
+        <hr>
+        <h4>Total: {{total}} </h4>
+      </div> -->
+        <div class="card-body">
+          <div class="d-flex flex-column">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="font-weight-bold">Base Charges:</span>
+              <span>₹ {{ flightSummary[0].baseFare }}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="font-weight-bold">Seat Charges:</span>
+              <span>₹ {{ seatCharges }}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="font-weight-bold">GST:</span>
+              <span>₹ {{ tax }}</span>
+            </div>
+            <hr />
+            <div class="d-flex justify-content-between font-weight-bold fs-4">
+              <span>Total:</span>
+              <span>₹ {{ total }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,113 @@
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-header">
+      <h1 class="card-title">Payment Page</h1>
+    </div>
+    <div class="card-body">
+      <!-- Timer Display -->
+      <div *ngIf="!isExpired" class="alert alert-info">
+        This page expires in: <strong>{{ timeRemaining }}</strong>
+      </div>
+      <div *ngIf="isExpired" class="alert alert-danger">
+        This page has expired.
+      </div>
+
+      <!-- Payment Form -->
+      <form [formGroup]="paymentForm" (ngSubmit)="pay()">
+        <div class="mb-3">
+          <label for="amount" class="form-label">Amount in ₹:</label>
+          <input
+            id="amount"
+            formControlName="amount"
+            type="text"
+            class="form-control-plaintext d-inline"
+            readonly
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="method" class="form-label">Method:</label>
+          <select
+            id="method"
+            formControlName="method"
+            class="form-select"
+            required
+          >
+            <option value="" disabled selected>Select a method</option>
+            <option value="upi">UPI</option>
+            <option value="debit">Debit Card</option>
+            <option value="credit">Credit Card</option>
+          </select>
+        </div>
+
+        <!-- Dynamic Payment Details Section -->
+        <div *ngIf="paymentForm.get('method')?.value === 'upi'" class="mb-3">
+          <label for="upiId" class="form-label">UPI ID:</label>
+          <input
+            id="upiId"
+            formControlName="upiId"
+            type="text"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <div
+          *ngIf="
+            paymentForm.get('method')?.value === 'debit' ||
+            paymentForm.get('method')?.value === 'credit'
+          "
+          class="mb-3"
+        >
+          <label for="cardNumber" class="form-label">Card Number:</label>
+          <input
+            id="cardNumber"
+            formControlName="cardNumber"
+            type="text"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <div class="row">
+          <div
+            *ngIf="
+              paymentForm.get('method')?.value === 'debit' ||
+              paymentForm.get('method')?.value === 'credit'
+            "
+            class="mb-3 col-6"
+          >
+            <label for="expiryDate" class="form-label">Expiry Date:</label>
+            <input
+              id="expiryDate"
+              formControlName="expiryDate"
+              type="text"
+              class="form-control"
+              placeholder="MM/YY"
+              required
+            />
+          </div>
+
+          <div
+            *ngIf="
+              paymentForm.get('method')?.value === 'debit' ||
+              paymentForm.get('method')?.value === 'credit'
+            "
+            class="mb-3 col-6"
+          >
+            <label for="cvv" class="form-label">CVV:</label>
+            <input
+              id="cvv"
+              formControlName="cvv"
+              type="password"
+              class="form-control"
+              required
+            />
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
