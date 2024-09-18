@@ -18,6 +18,9 @@ import { AdminLoginComponent } from './admin-login/admin-login.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { AddFlightComponent } from './add-flight/add-flight.component';
 import { EditScheduleComponent } from './edit-schedule/edit-schedule.component';
+import { BookingSummaryComponent } from './booking-summary/booking-summary.component';
+import { PaymentComponent } from './payment/payment.component';
+import { TimeFormatPipe } from './time-format.pipe';
 
 @NgModule({
   declarations: [
@@ -34,7 +37,10 @@ import { EditScheduleComponent } from './edit-schedule/edit-schedule.component';
     AdminLoginComponent,
     AdminDashboardComponent,
     AddFlightComponent,
-    EditScheduleComponent
+    EditScheduleComponent,
+    BookingSummaryComponent,
+    PaymentComponent,
+    TimeFormatPipe
   ],
   imports: [
     BrowserModule,

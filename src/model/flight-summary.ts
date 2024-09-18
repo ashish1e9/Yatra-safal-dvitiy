@@ -1,9 +1,9 @@
 import { Time } from "@angular/common";
 
 export interface FlightSummary {
-  flightScheduleId: number;
-  departureTime: Time; //from flight schedule
-  arrivalTime: Time; // from flight schedule
+  flightNo: string;
+  departureTime: string; //from flight schedule
+  arrivalTime: string; // from flight schedule
   baseFare: number;
   sourceCity: string;
   destinationCity: string;

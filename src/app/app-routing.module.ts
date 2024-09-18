@@ -13,6 +13,8 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 import { EditScheduleComponent } from './edit-schedule/edit-schedule.component';
 import { AddFlightComponent } from './add-flight/add-flight.component';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
+import { BookingSummaryComponent } from './booking-summary/booking-summary.component';
+import { PaymentComponent } from './payment/payment.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -28,6 +30,8 @@ const routes: Routes = [
   {path: "admin", component: AdminLoginComponent},
   {path: "flight/add", component: AddFlightComponent},
   {path: "schedule/edit", component: EditScheduleComponent},
+  {path: "booking/summary", component: BookingSummaryComponent},
+  {path: "booking/payment", component: PaymentComponent},
 ];
 
 @NgModule({
