@@ -1,16 +1,15 @@
-import { Time } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder,FormControl, FormArray } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Flight, FlightSummary, FlightView, Airline } from 'src/model/flight-summary';
+import { Airline, Flight, FlightView } from 'src/model/flight-summary';
 
 @Component({
-  selector: 'flight-search',
-  templateUrl: './flight-search.component.html',
-  styleUrls: ['./flight-search.component.css']
+  selector: 'flight-return',
+  templateUrl: './flight-return.component.html',
+  styleUrls: ['./flight-return.component.css']
 })
-export class FlightSearchComponent implements OnInit {
+export class FlightReturnComponent implements OnInit {
 
   searchForm!: FormGroup;
   filterFormDay!: FormGroup;
@@ -28,6 +27,7 @@ export class FlightSearchComponent implements OnInit {
       source: ['Washington'],
       destination: ['LA'],
       date: ['2024-12-23'],
+      returndate: ['2024-12-23'],
       noOfPassengers: ['4']
     });
     this.filterFormDay = this.fb.group({
