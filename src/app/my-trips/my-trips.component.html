@@ -1,0 +1,58 @@
+<!-- <h1>My Trips works</h1>
+<div class="container">
+    <h2>Booking History</h2>
+  
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Ticket ID</th>
+          <th>Booking Date</th>
+          <th>Seats Booked</th>
+          <th>Passenger Name</th>
+          <th>Passport No</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let history of bookings">
+          <td>{{ history.ticketId }}</td>
+          <td>{{ history.bookingDate | date: 'mediumDate' }}</td>
+          <td>{{ history.seatsBooked }}</td>
+          <td>{{ history.passengerName }}</td>
+          <td>{{ history.passportNo }}</td>
+          <td>{{ history.email }}</td>
+          <button class="btn btn-danger" (click)="cancelBooking(history.ticketId)">Cancel</button>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+   -->
+
+   <div class="container">
+    <div *ngFor="let card of bookingHistoryCard" class="card my-3">
+      <div class="card-header">
+        <h5 class="card-title">
+          Booking #{{ card.bookingId }} - {{ card.airlineName }}
+        </h5>
+        <p class="card-text">Flight No: {{ card.flightNo }}</p>
+        <p class="card-text">Booking Date: {{ card.bookingDate | date: 'medium' }}</p>
+      </div>
+  
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted">
+          {{ card.sourceCity }} to {{ card.destinationCity }}
+        </h6>
+        <p class="card-text">Seats Booked: {{ card.seatsBooked }}</p>
+        <p class="card-text">Departure: {{ card.departureTime | date: 'short' }}</p>
+        <p class="card-text">Arrival: {{ card.arrivalTime | date: 'short' }}</p>
+  
+        <div *ngFor="let history of card.bookingHistory" class="border p-3 mb-2">
+          <strong>Passenger:</strong> {{ history.passengerName }} <br>
+          <strong>Seat No:</strong> {{ history.seatNo }} <br>
+          <strong>Passport No:</strong> {{ history.passportNo }} <br>
+          <strong>Email:</strong> {{ history.email }}
+        </div>
+      </div>
+    </div>
+  </div>
+  

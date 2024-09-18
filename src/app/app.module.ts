@@ -18,6 +18,7 @@ import { AdminLoginComponent } from './admin-login/admin-login.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { AddFlightComponent } from './add-flight/add-flight.component';
 import { EditScheduleComponent } from './edit-schedule/edit-schedule.component';
+import { MyTripsComponent } from './my-trips/my-trips.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { EditScheduleComponent } from './edit-schedule/edit-schedule.component';
     AdminLoginComponent,
     AdminDashboardComponent,
     AddFlightComponent,
-    EditScheduleComponent
+    EditScheduleComponent,
+    MyTripsComponent
   ],
   imports: [
     BrowserModule,
