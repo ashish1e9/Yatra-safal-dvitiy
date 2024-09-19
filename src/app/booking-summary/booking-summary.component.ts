@@ -16,9 +16,9 @@ import { Traveller } from 'src/model/traveller';
 })
 export class BookingSummaryComponent implements OnInit {
   bookingData!: BookingData;
-  flightScheduleId: number = 2;
-  userId: number = 1;
-  flightClass: string = 'ECONOMY';
+  flightScheduleId!: number;
+  userId!: number;
+  flightClass!: string;
   flightSummary!: FlightSummary[];
   flightType!: string;
   travellers!: Traveller[];
@@ -83,6 +83,7 @@ export class BookingSummaryComponent implements OnInit {
       if (response?.status) {
         sessionStorage.setItem("bookingId", response?.bookingId)
         sessionStorage.setItem("total", this.total.toString());
+        sessionStorage.setItem("flightSummary", JSON.stringify(this.flightSummary[0]))
         this.createPaymentSession().subscribe((time) => {
           sessionStorage.setItem("creationTime", time)
           
@@ -97,6 +98,10 @@ export class BookingSummaryComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.userId = parseInt(localStorage.getItem("userId")!);
+    this.flightScheduleId = parseInt(localStorage.getItem("flightScheduleId")!);
+    this.flightClass = localStorage.getItem("flightClass")!;
+
     if (localStorage.getItem('passengerAssignments')) {
       this.travellers = JSON.parse(
         localStorage.getItem('passengerAssignments')!

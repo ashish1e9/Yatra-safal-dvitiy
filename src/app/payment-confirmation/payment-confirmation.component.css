@@ -1,0 +1,28 @@
+.card__success {
+    position: absolute;
+    top: -50px;
+    left: 145px;
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    background-color: #60c878;
+    border: 5px solid #fff;
+  }
+  .card__success i {
+    color: #fff;
+    line-height: 100px;
+    font-size: 45px;
+  }
+  .card__msg {
+    text-transform: uppercase;
+    color: #55585b;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+
+  .check_mark{
+    width: 3rem;
+    height: 3rem;
+    display: inline-block;
+  }

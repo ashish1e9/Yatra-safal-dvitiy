@@ -29,6 +29,8 @@ import { FlightReturnComponent } from './flight-return/flight-return.component';
 import { FlightSelectSummaryComponent } from './flight-select-summary/flight-select-summary.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DownloadTicketComponent } from './download-ticket/download-ticket.component';
+import { PaymentConfirmationComponent } from './payment-confirmation/payment-confirmation.component';
+import { ViewTicketsComponent } from './view-tickets/view-tickets.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +55,9 @@ import { DownloadTicketComponent } from './download-ticket/download-ticket.compo
     SelectPassengerComponent,
     FlightReturnComponent,
     FlightSelectSummaryComponent,
-    DownloadTicketComponent
+    DownloadTicketComponent,
+    PaymentConfirmationComponent,
+    ViewTicketsComponent
   ],
   imports: [
     BrowserModule,
