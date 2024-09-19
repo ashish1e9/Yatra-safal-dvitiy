@@ -34,6 +34,7 @@ export class FlightSearchComponent implements OnInit {
   alertMessage = '';
   alertFadeOut!: boolean;
   minDate: string = '';
+  noOfPassengers: number = 0;
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private flightService: FlightService) {
 
     // Initializing forms with correct form controls
@@ -62,9 +63,12 @@ export class FlightSearchComponent implements OnInit {
     this.router.navigate([`/${route}`]);
 
   }
-  selectFlight(flight: FlightView) {
-    this.flightService.setReturnFlight(null);
+  selectFlight(flightScheduleId:number,flightClass:string,flight:FlightView) {
+    localStorage.setItem('flightScheduleId', JSON.stringify(flightScheduleId));
+    localStorage.setItem('flightClass', flightClass.toUpperCase());
+    localStorage.setItem('noOfSeats', JSON.stringify(this.noOfPassengers));
     this.flightService.setOneWayFlight(flight);
+
     this.router.navigate(['/flight/view']);
   }
 
@@ -216,6 +220,7 @@ export class FlightSearchComponent implements OnInit {
     this.showAlert = false;
     let date = this.searchForm.value.date;
     let noOfPassengers = this.searchForm.value.noOfPassengers;
+     this.noOfPassengers = this.searchForm.value.noOfPassengers;
     this.filteredFlights = this.flightService.getFilteredFlights();
     this.flightService.setSource(source);
     this.flightService.setDestination(destination);

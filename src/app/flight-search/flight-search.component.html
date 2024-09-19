@@ -8,7 +8,7 @@
 </div>
 
 <form [formGroup]="searchForm" (ngSubmit)="search()">
-    <div class="row">
+    <div class="row m-3">
       <!-- Source Input with Dropdown -->
       <div class="col-md-4 position-relative">
         <div class="form-floating mb-3">
@@ -73,7 +73,7 @@
     </div>
   
     <!-- Date Input and Flight Type Radio Buttons -->
-    <div class="row">
+    <div class="row m-3">
         <div class="col-md-4">
           <div class="form-floating mb-3">
             <input type="date" class="form-control" id="dateInput"
@@ -82,9 +82,9 @@
             <label for="dateInput">Date</label>
           </div>
         </div>
-  
+
       <!-- One Way and Return Radio Buttons -->
-      <div class="col-md-4">
+      <div class="col-md-8">
         <div class="form-floating mb-3">
           <div class="btn-group" role="group" aria-label="Flight Type">
             <input type="radio" class="btn-check" name="btnradio" id="single" autocomplete="off" checked>
@@ -98,7 +98,7 @@
     </div>
   
     <!-- Search Button -->
-    <button type="submit" class="btn btn-primary">Search</button>
+    <button type="submit" class="btn btn-primary ms-4">Search</button>
   </form>
   
 
@@ -233,8 +233,13 @@
                 </div>
                 <!-- Book Flight Button -->
                 <div class="text-end mt-3">
-                  <button class="btn btn-primary" (click)="selectFlight(flight)">
-                    Book Flight
+                  <button class="btn btn-primary" (click)="selectFlight(flight.flightScheduleId,'ECONOMY',flight)">
+                    Book Economy Flight
+                  </button>
+                </div>
+                <div class="text-end mt-3">
+                  <button class="btn btn-primary" (click)="selectFlight(flight.flightScheduleId,'BUSINESS',flight)">
+                    Book Business Flight
                   </button>
                 </div>
               </div>

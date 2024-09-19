@@ -50,3 +50,10 @@ export class Airline{
   contactNumber!:string;
   
 }
+
+
+export class selectedFlight{
+  flightScheduleId!:number;
+  class!:string;
+  noOfPassengers!:number;
+}

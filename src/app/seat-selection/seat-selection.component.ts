@@ -25,6 +25,9 @@ export class SeatSelectionComponent implements OnInit {
   hoveredSeat: Seat | null = null;
   isTooltipVisible: boolean = false;
   tooltipStyle: { [key: string]: string } = {};
+  flightScheduleId: number = 0;
+  noOfPassengers: number = 0;
+  
 
   constructor(private http: HttpClient,private router: Router) { }
 
@@ -39,9 +42,9 @@ export class SeatSelectionComponent implements OnInit {
 
   fetchSeatData() {
     const params = new HttpParams()
-      .set('flightScheduleId', '10')
-      .set('numberOfSeats', '2')
-      .set('flightClass', 'ECONOMY');
+      .set('flightScheduleId',localStorage.getItem('flightScheduleId') || '')
+      .set('numberOfSeats', localStorage.getItem('noOfSeats') || '')
+      .set('flightClass', localStorage.getItem('flightClass') || '');
 
     this.http.get<any>('http://localhost:8080/flight/fetchFlightStatus', { params })
       .subscribe(response => {

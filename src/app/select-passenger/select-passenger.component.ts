@@ -78,6 +78,7 @@ export class SelectPassengerComponent implements OnInit {
   }
 
   addNewPassenger() {
+    alert('New passenger added!');
     const passengerData = {
       gender: this.newPassenger.gender.toUpperCase(),
       firstName: this.newPassenger.firstName,
