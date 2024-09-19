@@ -1,199 +1,389 @@
 <navbar></navbar>
+<div *ngIf="showAlert" 
+     [ngClass]="{'alert-transition': true, 'fade-out-animation': alertFadeOut}" 
+     class="alert alert-danger alert-dismissible fade show" 
+     role="alert">
+  {{ alertMessage }}
+  <button type="button" class="btn-close" (click)="showAlert = false" aria-label="Close"></button>
+</div>
+
 <form [formGroup]="searchForm" (ngSubmit)="search()">
     <div class="row">
-        <div class="col-md-4">
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="sourceInput"
-                    formControlName="source" placeholder="Enter Source">
-                <label for="sourceInput">Source</label>
-            </div>
+      <!-- Source Input with Dropdown -->
+      <div class="col-md-4 position-relative">
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="sourceInput"
+                 formControlName="source" placeholder="Enter Source"
+                 (input)="filterCities($any($event).target.value, 'source')" 
+                 (focus)="showSourceDropdown = true" 
+                 (blur)="hideDropdownWithDelay('source')"
+                 (keydown)="handleKeydown($event, 'source')">
+          <label for="sourceInput">Source</label>
+  
+          <!-- Dropdown for Source Cities -->
+          <ul *ngIf="showSourceDropdown && filteredSourceCities.length > 0" 
+              class="list-group position-absolute w-100" 
+              style="max-height: 150px; overflow-y: auto; z-index: 1000; background-color: white; border: 1px solid #ccc; border-radius: 4px;">
+            <li class="list-group-item list-group-item-action" 
+                *ngFor="let city of filteredSourceCities; let i = index" 
+                [class.active]="i === highlightedIndex"
+                (mousedown)="selectCity(city, 'source')"
+                (mouseover)="highlightedIndex = i">
+              {{ city }}
+            </li>
+          </ul>
         </div>
-        <div class="col-md-4">
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="destinationInput"
-                    formControlName="destination"
-                    placeholder="Enter Destination">
-                <label for="destinationInput">Destination</label>
-            </div>
+      </div>
+  
+      <!-- Destination Input with Dropdown -->
+      <div class="col-md-4 position-relative">
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="destinationInput"
+                 formControlName="destination" placeholder="Enter Destination"
+                 (input)="filterCities($any($event).target.value, 'destination')" 
+                 (focus)="showDestinationDropdown = true" 
+                 (blur)="hideDropdownWithDelay('destination')"
+                 (keydown)="handleKeydown($event, 'destination')">
+          <label for="destinationInput">Destination</label>
+  
+          <!-- Dropdown for Destination Cities -->
+          <ul *ngIf="showDestinationDropdown && filteredDestinationCities.length > 0" 
+              class="list-group position-absolute w-100" 
+              style="max-height: 150px; overflow-y: auto; z-index: 1000; background-color: white; border: 1px solid #ccc; border-radius: 4px;">
+            <li class="list-group-item list-group-item-action" 
+                *ngFor="let city of filteredDestinationCities; let i = index" 
+                [class.active]="i === highlightedIndex"
+                (mousedown)="selectCity(city, 'destination')"
+                (mouseover)="highlightedIndex = i">
+              {{ city }}
+            </li>
+          </ul>
         </div>
-        <div class="col-md-4">
-            <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="noOfPassenger"
-                    formControlName="noOfPassengers"
-                    placeholder="Enter No of Passengers">
-                <label for="noOfPassenger">No of Passengers</label>
-            </div>
+      </div>
+  
+      <!-- Number of Passengers Input -->
+      <div class="col-md-4">
+        <div class="form-floating mb-3">
+          <input type="number" class="form-control" id="noOfPassenger"
+                 formControlName="noOfPassengers"
+                 placeholder="Enter No of Passengers">
+          <label for="noOfPassenger">No of Passengers</label>
         </div>
+      </div>
     </div>
+  
+    <!-- Date Input and Flight Type Radio Buttons -->
     <div class="row">
         <div class="col-md-4">
-            <div class="form-floating mb-3">
-                <input type="date" class="form-control" id="dateInput"
-                    formControlName="date" placeholder="Enter Date">
-                <label for="dateInput">Date</label>
-            </div>
+          <div class="form-floating mb-3">
+            <input type="date" class="form-control" id="dateInput"
+                   formControlName="date" placeholder="Enter Date"
+                   [attr.min]="today">
+            <label for="dateInput">Date</label>
+          </div>
         </div>
-        <div class="col-md-4">
-            <div class="form-floating mb-3">
-                <input type="date" class="form-control" id="dateInput"
-                    formControlName="returndate" placeholder="Enter Date">
-                <label for="dateInput">Return Date</label>
-            </div>
+      <div class="col-md-4">
+        <div class="form-floating mb-3">
+          <input type="date" class="form-control" id="returndateInput"
+                 formControlName="returndate" placeholder="Enter Return Date"
+                 [attr.min]="minDate">
+          <label for="returndateInput">Return Date</label>
         </div>
-        <div class="col-md-4">
-            <div class="form-floating mb-3">
-                <div class="btn-group" role="group"
-                    aria-label="Basic radio toggle button group">
-                    <input type="radio" class="btn-check" name="btnradio"
-                        id="single" autocomplete="off" checked>
-                    <label class="btn btn-outline-primary" for="single" (click)="navigateTo('flight/search')">One
-                        Way</label>
-
-                    <input type="radio" class="btn-check" name="btnradio"
-                        id="return" autocomplete="off">
-                    <label class="btn btn-outline-primary"
-                        for="return" (click)="navigateTo('flight/return')">Return</label>
-
-                </div>
-            </div>
+      </div>
+  
+      <!-- One Way and Return Radio Buttons -->
+      <div class="col-md-4">
+        <div class="form-floating mb-3">
+          <div class="btn-group" role="group" aria-label="Flight Type">
+            <input type="radio" class="btn-check" name="btnradio" id="single" autocomplete="off">
+            <label class="btn btn-outline-primary" for="single" (click)="navigateTo('flight/search')">One Way</label>
+  
+            <input type="radio" class="btn-check" name="btnradio" id="return" autocomplete="off"  checked>
+            <label class="btn btn-outline-primary" for="return" (click)="navigateTo('flight/return')">Return</label>
+          </div>
         </div>
+      </div>
     </div>
+  
+    <!-- Search Button -->
     <button type="submit" class="btn btn-primary">Search</button>
-</form>
-
+  </form>
+  
 <div class="container mt-4">
     <div class="row">
-        <div class="col-md-4">
+        <!-- Left Column for Filters and Sort Options -->
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Filters</h5>
-                    <div class="mb-3">
-                        <form [formGroup]="filterFormDay"
-                            (ngSubmit)="filter()">
-                            <label class="form-label"><strong>Time of
-                                    Flight</strong></label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox"
-                                    id="morning"
-                                    formControlName="morning"
-                                    value="morning">
-                                <label class="form-check-label" for="morning">
-                                    Morning (5:00 am - 06:00pm)
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox"
-                                    id="night"
-                                    formControlName="night" value="night">
-                                <label class="form-check-label" for="night">
-                                    Night (06:00 pm - 05:00am)
-                                </label>
-                            </div>
-                        </form>
-                    </div>
+                    <h5 class="card-title"></h5>
 
-                    <!-- Airline Filter -->
-                    <!-- Airline Filter with Multiple Selection -->
-                    <div class="mb-3">
-                        <form [formGroup]="filterFormAirline" (ngSubmit)="filter()">
-                            <label class="form-label"><strong>Airline</strong></label>
-                            <div class="form-check" *ngFor="let airline of airlines">
-                                <input 
-                                    class="form-check-input" 
-                                    type="checkbox" 
-                                    [id]="airline.id"
-                                    (change)="onAirlineSelectionChange($event, airline.airlineName)"
-                                >
-                                <label class="form-check-label" [for]="airline.id">
-                                    {{ airline.airlineName }}
-                                </label>
-                            </div>
-                        </form>
-                    </div>
-                    
+                    <!-- Combined Filters, Airline, and Sort Options -->
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <!-- Time of Flight Filter -->
+                            <form [formGroup]="filterFormDay"
+                                (ngSubmit)="filter()">
+                                <label class="form-label"><strong>Time of
+                                        Flight</strong></label>
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                        type="checkbox" id="morningLeft"
+                                        formControlName="morning"
+                                        value="morning">
+                                    <label class="form-check-label"
+                                        for="morningLeft">Morning</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                        type="checkbox" id="nightLeft"
+                                        formControlName="night" value="night">
+                                    <label class="form-check-label"
+                                        for="nightLeft">Night</label>
+                                </div>
+                            </form>
+                        </div>
 
+                        <div class="col-md-12 mb-3">
+                            <!-- Airline Filter -->
+                            <form [formGroup]="filterFormAirline"
+                                (ngSubmit)="filter()">
+                                <label
+                                    class="form-label"><strong>Airline</strong></label>
+                                <div class="form-check"
+                                    *ngFor="let airline of airlines">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        [id]="airline.id"
+                                        (change)="onAirlineSelectionChange($event, airline.airlineName)">
+                                    <label class="form-check-label"
+                                        [for]="airline.id">
+                                        {{ airline.airlineName }}
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <!-- Sort by Departure Time -->
+                            <form [formGroup]="filterFormDeparture"
+                                (ngSubmit)="filter()">
+                                <label class="form-label"><strong>Sort by
+                                        Departure</strong></label>
+                                <select class="form-select"
+                                    formControlName="sortDeparture"
+                                    id="sortDepartureTimeLeft">
+                                    <option value>Select</option>
+                                    <option value="asc">Earliest to
+                                        Latest</option>
+                                    <option value="desc">Latest to
+                                        Earliest</option>
+                                </select>
+                            </form>
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <!-- Sort by Price -->
+                            <form [formGroup]="filterFormPrice"
+                                (ngSubmit)="filter()">
+                                <label class="form-label"><strong>Sort by
+                                        Price</strong></label>
+                                <select class="form-select"
+                                    formControlName="sortPrice"
+                                    id="sortPriceLeft">
+                                    <option value>Select</option>
+                                    <option value="low-high">Low to
+                                        High</option>
+                                    <option value="high-low">High to
+                                        Low</option>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Sort options on the right -->
-        <div class="col-md-8">
+        <!-- Right Column for Filters and Sort Options -->
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Sort Options</h5>
-                    <form [formGroup]="filterFormDeparture"
-                        (ngSubmit)="filter()">
-                        <!-- Sort by Departure Time -->
-                        <div class="mb-3">
-                            <label class="form-label"><strong>Sort by Departure
-                                    Time</strong></label>
-                            <select class="form-select"
-                                formControlName="sortDeparture"
-                                id="sortDepartureTime">
-                                <option value>Select</option>
-                                <option value="asc">Earliest to Latest</option>
-                                <option value="desc">Latest to Earliest</option>
-                            </select>
+                    <h5 class="card-title"></h5>
+
+                    <!-- Combined Filters, Airline, and Sort Options -->
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <!-- Time of Flight Filter -->
+                            <form [formGroup]="filterFormDayReturn"
+                                (ngSubmit)="filterReturn()">
+                                <label class="form-label"><strong>Time of
+                                        Flight</strong></label>
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                        type="checkbox" id="morningRight"
+                                        formControlName="morning"
+                                        value="morning">
+                                    <label class="form-check-label"
+                                        for="morningRight">Morning</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                        type="checkbox" id="nightRight"
+                                        formControlName="night" value="night">
+                                    <label class="form-check-label"
+                                        for="nightRight">Night</label>
+                                </div>
+                            </form>
                         </div>
-                    </form>
-                    <form [formGroup]="filterFormPrice"
-                        (ngSubmit)="filter()">
-                        <!-- Sort by Price -->
-                        <div class="mb-3">
-                            <label class="form-label"><strong>Sort by
-                                    Price</strong></label>
-                            <select class="form-select" id="sortPrice"
-                                formControlName="sortPrice">
-                                <option value>Select</option>
-                                <option value="low-high">Low to High</option>
-                                <option value="high-low">High to Low</option>
-                            </select>
+
+                        <div class="col-md-12 mb-3">
+                            <!-- Airline Filter -->
+                            <form [formGroup]="filterFormAirlineReturn"
+                                (ngSubmit)="filterReturn()">
+                                <label
+                                    class="form-label"><strong>Airline</strong></label>
+                                <div class="form-check"
+                                    *ngFor="let airline of airlines">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        [id]="airline.id"
+                                        (change)="onAirlineSelectionChangeReturn($event, airline.airlineName)">
+                                    <label class="form-check-label"
+                                        [for]="airline.id">
+                                        {{ airline.airlineName }}
+                                    </label>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+
+                        <div class="col-md-12 mb-3">
+                            <!-- Sort by Departure Time -->
+                            <form [formGroup]="filterFormDepartureReturn"
+                                (ngSubmit)="filterReturn()">
+                                <label class="form-label"><strong>Sort by
+                                        Departure</strong></label>
+                                <select class="form-select"
+                                    formControlName="sortDeparture"
+                                    id="sortDepartureTimeRight">
+                                    <option value>Select</option>
+                                    <option value="asc">Earliest to
+                                        Latest</option>
+                                    <option value="desc">Latest to
+                                        Earliest</option>
+                                </select>
+                            </form>
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <!-- Sort by Price -->
+                            <form [formGroup]="filterFormPriceReturn"
+                                (ngSubmit)="filterReturn()">
+                                <label class="form-label"><strong>Sort by
+                                        Price</strong></label>
+                                <select class="form-select"
+                                    formControlName="sortPrice"
+                                    id="sortPriceRight">
+                                    <option value>Select</option>
+                                    <option value="low-high">Low to
+                                        High</option>
+                                    <option value="high-low">High to
+                                        Low</option>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <div class="container mt-4">
-    <div class="row" *ngFor="let flight of filteredFlights">
-        <div class="col-md-12 mb-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <!-- Airline Name in Center -->
-                        <div class="col-md-12 text-center">
-                            <h3 class="text-primary font-weight-bold">{{flight.airline.airlineName}}</h3>
-                        </div>
-                        
-                        <div class="col-md-8">
-                            <h5 class="card-title">Flight No: {{flight.flightNo}}</h5>
-                            <p class="card-text">
-                                <strong>Source:</strong> {{flight.sourceCity}}<br>
-                                <strong>Destination:</strong> {{flight.destinationCity}}<br>
-                            </p>
-                            <p class="card-text">
-                                <strong>Base Fare (Economy):</strong> {{flight.economyBaseFare}}<br>
-                                <strong>Base Fare (Business):</strong> {{flight.businessBaseFare}}<br>
-                            </p>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p class="mb-0"><strong>Departure Time:</strong> {{flight.departureTime}}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p class="mb-0"><strong>Arrival Time:</strong> {{flight.arrivalTime}}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
+    <div class="row">
+      <!-- One Way Flights -->
+      <div class="col-md-6">
+        <h4 class="text-center text-primary font-weight-bold mb-3">{{source}}---->{{destination}}</h4>
+        <div class="row">
+          <div class="col-md-12 mb-3" *ngFor="let flight of filteredFlights">
+            <div class="card" [ngClass]="{'selected-card': selectedOneWayFlight === flight}">
+              <div class="card-body">
+                <div class="row">
+                  <!-- Airline Name in Center -->
+                  <div class="col-md-12 text-center">
+                    <h5 class="text-primary font-weight-bold">{{ flight.airline.airlineName }}</h5>
+                  </div>
+  
+                  <div class="col-md-8">
+                    <h6 class="card-title">Flight No: {{ flight.flightNo }}</h6>
+                    <p class="card-text">
+                      <strong>Source:</strong> {{ flight.sourceCity }}<br>
+                      <strong>Destination:</strong> {{ flight.destinationCity }}<br>
+                    </p>
+                    <p class="card-text">
+                      <strong>Economy Fare:</strong> {{ flight.economyBaseFare }}<br>
+                      <strong>Business Fare:</strong> {{ flight.businessBaseFare }}<br>
+                    </p>
+                  </div>
+  
+                  <div class="col-md-4 text-center">
+                    <p><strong>Departure Time:</strong> {{ flight.departureTime }}</p>
+                    <p><strong>Arrival Time:</strong> {{ flight.arrivalTime }}</p>
+                    <!-- Select Button to choose flight -->
+                    <button class="btn btn-outline-primary" (click)="selectOneWayFlight(flight)">
+                      Select
+                    </button>
+                  </div>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
+  
+      <!-- Return Flights -->
+      <div class="col-md-6">
+        <h4 class="text-center text-primary font-weight-bold mb-3">{{destination}}---->{{source}}</h4>
+        <div class="row">
+          <div class="col-md-12 mb-3" *ngFor="let flight of returnFilteredFlights">
+            <div class="card" [ngClass]="{'selected-card': selectedReturnFlight === flight}">
+              <div class="card-body">
+                <div class="row">
+                  <!-- Airline Name in Center -->
+                  <div class="col-md-12 text-center">
+                    <h5 class="text-primary font-weight-bold">{{ flight.airline.airlineName }}</h5>
+                  </div>
+  
+                  <div class="col-md-8">
+                    <h6 class="card-title">Flight No: {{ flight.flightNo }}</h6>
+                    <p class="card-text">
+                      <strong>Source:</strong> {{ flight.sourceCity }}<br>
+                      <strong>Destination:</strong> {{ flight.destinationCity }}<br>
+                    </p>
+                    <p class="card-text">
+                      <strong>Economy Fare:</strong> {{ flight.economyBaseFare }}<br>
+                      <strong>Business Fare:</strong> {{ flight.businessBaseFare }}<br>
+                    </p>
+                  </div>
+  
+                  <div class="col-md-4 text-center">
+                    <p><strong>Departure Time:</strong> {{ flight.departureTime }}</p>
+                    <p><strong>Arrival Time:</strong> {{ flight.arrivalTime }}</p>
+                    <!-- Select Button to choose flight -->
+                    <button class="btn btn-outline-primary" (click)="selectReturnFlight(flight)">
+                      Select
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
+  
+    <!-- Button to confirm selected flights -->
+    <div class="text-center mt-4" *ngIf="filteredFlights.length > 0 && returnFilteredFlights.length > 0">
+      <button class="btn btn-primary" (click)="confirmFlights()">Confirm Flights</button>
+    </div>
+  </div>
+  

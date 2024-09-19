@@ -1,58 +1,107 @@
 <navbar></navbar>
+<div *ngIf="showAlert" 
+     [ngClass]="{'alert-transition': true, 'fade-out-animation': alertFadeOut}" 
+     class="alert alert-danger alert-dismissible fade show" 
+     role="alert">
+  {{ alertMessage }}
+  <button type="button" class="btn-close" (click)="showAlert = false" aria-label="Close"></button>
+</div>
+
 <form [formGroup]="searchForm" (ngSubmit)="search()">
     <div class="row">
-        <div class="col-md-4">
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="sourceInput"
-                    formControlName="source" placeholder="Enter Source">
-                <label for="sourceInput">Source</label>
-            </div>
+      <!-- Source Input with Dropdown -->
+      <div class="col-md-4 position-relative">
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="sourceInput"
+                 formControlName="source" placeholder="Enter Source"
+                 (input)="filterCities($any($event).target.value, 'source')" 
+                 (focus)="showSourceDropdown = true" 
+                 (blur)="hideDropdownWithDelay('source')"
+                 (keydown)="handleKeydown($event, 'source')">
+          <label for="sourceInput">Source</label>
+  
+          <!-- Dropdown for Source Cities -->
+          <ul *ngIf="showSourceDropdown && filteredSourceCities.length > 0" 
+              class="list-group position-absolute w-100" 
+              style="max-height: 150px; overflow-y: auto; z-index: 1000; background-color: white; border: 1px solid #ccc; border-radius: 4px;">
+            <li class="list-group-item list-group-item-action" 
+                *ngFor="let city of filteredSourceCities; let i = index" 
+                [class.active]="i === highlightedIndex"
+                (mousedown)="selectCity(city, 'source')"
+                (mouseover)="highlightedIndex = i">
+              {{ city }}
+            </li>
+          </ul>
         </div>
-        <div class="col-md-4">
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="destinationInput"
-                    formControlName="destination"
-                    placeholder="Enter Destination">
-                <label for="destinationInput">Destination</label>
-            </div>
+      </div>
+  
+      <!-- Destination Input with Dropdown -->
+      <div class="col-md-4 position-relative">
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="destinationInput"
+                 formControlName="destination" placeholder="Enter Destination"
+                 (input)="filterCities($any($event).target.value, 'destination')" 
+                 (focus)="showDestinationDropdown = true" 
+                 (blur)="hideDropdownWithDelay('destination')"
+                 (keydown)="handleKeydown($event, 'destination')">
+          <label for="destinationInput">Destination</label>
+  
+          <!-- Dropdown for Destination Cities -->
+          <ul *ngIf="showDestinationDropdown && filteredDestinationCities.length > 0" 
+              class="list-group position-absolute w-100" 
+              style="max-height: 150px; overflow-y: auto; z-index: 1000; background-color: white; border: 1px solid #ccc; border-radius: 4px;">
+            <li class="list-group-item list-group-item-action" 
+                *ngFor="let city of filteredDestinationCities; let i = index" 
+                [class.active]="i === highlightedIndex"
+                (mousedown)="selectCity(city, 'destination')"
+                (mouseover)="highlightedIndex = i">
+              {{ city }}
+            </li>
+          </ul>
         </div>
-        <div class="col-md-4">
-            <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="noOfPassenger"
-                    formControlName="noOfPassengers"
-                    placeholder="Enter No of Passengers">
-                <label for="noOfPassenger">No of Passengers</label>
-            </div>
+      </div>
+  
+      <!-- Number of Passengers Input -->
+      <div class="col-md-4">
+        <div class="form-floating mb-3">
+          <input type="number" class="form-control" id="noOfPassenger"
+                 formControlName="noOfPassengers"
+                 placeholder="Enter No of Passengers">
+          <label for="noOfPassenger">No of Passengers</label>
         </div>
+      </div>
     </div>
+  
+    <!-- Date Input and Flight Type Radio Buttons -->
     <div class="row">
         <div class="col-md-4">
-            <div class="form-floating mb-3">
-                <input type="date" class="form-control" id="dateInput"
-                    formControlName="date" placeholder="Enter Date">
-                <label for="dateInput">Date</label>
-            </div>
+          <div class="form-floating mb-3">
+            <input type="date" class="form-control" id="dateInput"
+                   formControlName="date" placeholder="Enter Date"
+                   [attr.min]="minDate">
+            <label for="dateInput">Date</label>
+          </div>
         </div>
-        <div class="col-md-4">
-            <div class="form-floating mb-3">
-                <div class="btn-group" role="group"
-                    aria-label="Basic radio toggle button group">
-                    <input type="radio" class="btn-check" name="btnradio"
-                        id="single" autocomplete="off" checked>
-                    <label class="btn btn-outline-primary" for="single" (click)="navigateTo('flight/search')">One
-                        Way</label>
-
-                    <input type="radio" class="btn-check" name="btnradio"
-                        id="return" autocomplete="off">
-                    <label class="btn btn-outline-primary"
-                        for="return" (click)="navigateTo('flight/return')">Return</label>
-
-                </div>
-            </div>
+  
+      <!-- One Way and Return Radio Buttons -->
+      <div class="col-md-4">
+        <div class="form-floating mb-3">
+          <div class="btn-group" role="group" aria-label="Flight Type">
+            <input type="radio" class="btn-check" name="btnradio" id="single" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="single" (click)="navigateTo('flight/search')">One Way</label>
+  
+            <input type="radio" class="btn-check" name="btnradio" id="return" autocomplete="off">
+            <label class="btn btn-outline-primary" for="return" (click)="navigateTo('flight/return')">Return</label>
+          </div>
         </div>
+      </div>
     </div>
+  
+    <!-- Search Button -->
     <button type="submit" class="btn btn-primary">Search</button>
-</form>
+  </form>
+  
+
 
 <div class="container mt-4">
     <div class="row">
@@ -149,44 +198,52 @@
     </div>
 </div>
 <div class="container mt-4">
-    <div class="row" *ngFor="let flight of filteredFlights">
-        <div class="col-md-12 mb-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <!-- Airline Name in Center -->
-                        <div class="col-md-12 text-center">
-                            <h3 class="text-primary font-weight-bold">{{flight.airline.airlineName}}</h3>
-                        </div>
-                        
-                        <div class="col-md-8">
-                            <h5 class="card-title">Flight No: {{flight.flightNo}}</h5>
-                            <p class="card-text">
-                                <strong>Source:</strong> {{flight.sourceCity}}<br>
-                                <strong>Destination:</strong> {{flight.destinationCity}}<br>
-                            </p>
-                            <p class="card-text">
-                                <strong>Base Fare (Economy):</strong> {{flight.economyBaseFare}}<br>
-                                <strong>Base Fare (Business):</strong> {{flight.businessBaseFare}}<br>
-                            </p>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p class="mb-0"><strong>Departure Time:</strong> {{flight.departureTime}}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p class="mb-0"><strong>Arrival Time:</strong> {{flight.arrivalTime}}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
+  <div class="row">
+    <!-- Flights List -->
+    <div class="col-md-12" *ngFor="let flight of filteredFlights">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <!-- Airline Name in Center -->
+            <div class="col-md-12 text-center">
+              <h3 class="text-primary font-weight-bold">{{ flight.airline.airlineName }}</h3>
             </div>
+
+            <div class="col-md-8">
+              <h5 class="card-title">Flight No: {{ flight.flightNo }}</h5>
+              <p class="card-text">
+                <strong>Source:</strong> {{ flight.sourceCity }}<br>
+                <strong>Destination:</strong> {{ flight.destinationCity }}<br>
+              </p>
+              <p class="card-text">
+                <strong>Base Fare (Economy):</strong> {{ flight.economyBaseFare }}<br>
+                <strong>Base Fare (Business):</strong> {{ flight.businessBaseFare }}<br>
+              </p>
+            </div>
+
+            <div class="col-md-4">
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-md-6">
+                    <p class="mb-0"><strong>Departure Time:</strong> {{ flight.departureTime }}</p>
+                  </div>
+                  <div class="col-md-6">
+                    <p class="mb-0"><strong>Arrival Time:</strong> {{ flight.arrivalTime }}</p>
+                  </div>
+                </div>
+                <!-- Book Flight Button -->
+                <div class="text-end mt-3">
+                  <button class="btn btn-primary" (click)="selectFlight(flight)">
+                    Book Flight
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
+
+

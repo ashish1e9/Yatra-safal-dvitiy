@@ -19,7 +19,7 @@ export interface FlightView {
   businessBaseFare: number;
   sourceCity: string;
   destinationCity: string;
-  scheduleDay: Date;
+  scheduleDate: Date;
   airline:Airline; // from flight schedule
 }
 
@@ -38,7 +38,7 @@ export class Flight{
 export class Schedule{
   
   id!:number;
-  date!:Date;
+  scheduleDay!:Date;
   departureTime!:string;
   arrivalTime!:string;
   fare!:number;

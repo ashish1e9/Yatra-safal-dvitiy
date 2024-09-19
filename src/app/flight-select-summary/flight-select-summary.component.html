@@ -1,0 +1,66 @@
+<div class="container mt-4">
+  <h2 class="text-center text-primary mb-4">Selected Flights</h2>
+
+  <!-- Display One-Way Flight -->
+  <div *ngIf="selectedOneWayFlight" class="card mb-4">
+    <div class="card-header text-white bg-primary">
+      <h5 class="mb-0">One-Way Flight</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h5 class="text-primary">{{ selectedOneWayFlight.airline.airlineName }}</h5>
+        </div>
+        <div class="col-md-8">
+          <h6 class="card-title">Flight No: {{ selectedOneWayFlight.flightNo }}</h6>
+          <p class="card-text">
+            <strong>Source:</strong> {{ selectedOneWayFlight.sourceCity }}<br>
+            <strong>Destination:</strong> {{ selectedOneWayFlight.destinationCity }}<br>
+          </p>
+          <p class="card-text">
+            <strong>Economy Fare:</strong> {{ selectedOneWayFlight.economyBaseFare }}<br>
+            <strong>Business Fare:</strong> {{ selectedOneWayFlight.businessBaseFare }}<br>
+          </p>
+        </div>
+        <div class="col-md-4 text-center">
+          <p><strong>Departure Time:</strong> {{ selectedOneWayFlight.departureTime }}</p>
+          <p><strong>Arrival Time:</strong> {{ selectedOneWayFlight.arrivalTime }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Display Return Flight -->
+  <div *ngIf="selectedReturnFlight" class="card mb-4">
+    <div class="card-header text-white bg-primary">
+      <h5 class="mb-0">Return Flight</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h5 class="text-primary">{{ selectedReturnFlight.airline.airlineName }}</h5>
+        </div>
+        <div class="col-md-8">
+          <h6 class="card-title">Flight No: {{ selectedReturnFlight.flightNo }}</h6>
+          <p class="card-text">
+            <strong>Source:</strong> {{ selectedReturnFlight.sourceCity }}<br>
+            <strong>Destination:</strong> {{ selectedReturnFlight.destinationCity }}<br>
+          </p>
+          <p class="card-text">
+            <strong>Economy Fare:</strong> {{ selectedReturnFlight.economyBaseFare }}<br>
+            <strong>Business Fare:</strong> {{ selectedReturnFlight.businessBaseFare }}<br>
+          </p>
+        </div>
+        <div class="col-md-4 text-center">
+          <p><strong>Departure Time:</strong> {{ selectedReturnFlight.departureTime }}</p>
+          <p><strong>Arrival Time:</strong> {{ selectedReturnFlight.arrivalTime }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Display Book Button -->
+  <div class="text-center">
+    <button class="btn btn-primary btn-lg" >Book Seats</button>
+  </div>
+</div>

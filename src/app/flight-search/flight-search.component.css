@@ -1,0 +1,56 @@
+/* Add this to your component's CSS file */
+.card {
+    transition: all 0.3s ease; /* Smooth transition for hover effect */
+    cursor: pointer; /* Pointer cursor on hover */
+  }
+  
+  .highlight-card {
+    border: 2px solid #007bff; /* Highlight color for selected flight */
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Optional shadow for better visibility */
+    background-color: #f0f8ff; /* Optional background color change for selected flight */
+  }
+  
+  /* Optional: Style the button */
+  .btn-primary {
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition for button */
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3; /* Darker color on hover */
+    border-color: #004085; /* Darker border color on hover */
+  }
+  /* Add this CSS to your styles or component stylesheet */
+.list-group-item {
+  cursor: pointer;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}
+/* Alert container styling */
+.alert-transition {
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+  position: relative;
+  z-index: 1050; /* Ensure the alert is on top */
+}
+
+/* Class to trigger fade-out effect */
+.alert-transition.fade-out {
+  opacity: 0;
+}
+
+/* Keyframes for fade-out animation */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Add animation for a smoother transition */
+.alert-transition.fade-out-animation {
+  animation: fadeOut 0.5s ease-in-out forwards;
+}

@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,6 +22,8 @@ import { AddFlightComponent } from './add-flight/add-flight.component';
 import { EditScheduleComponent } from './edit-schedule/edit-schedule.component';
 import { SelectPassengerComponent } from './select-passenger/select-passenger.component';
 import { FlightReturnComponent } from './flight-return/flight-return.component';
+import { FlightSelectSummaryComponent } from './flight-select-summary/flight-select-summary.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -38,14 +42,18 @@ import { FlightReturnComponent } from './flight-return/flight-return.component';
     AddFlightComponent,
     EditScheduleComponent,
     SelectPassengerComponent,
-    FlightReturnComponent
+    FlightReturnComponent,
+    FlightSelectSummaryComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule,
+    MatAutocompleteModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]
