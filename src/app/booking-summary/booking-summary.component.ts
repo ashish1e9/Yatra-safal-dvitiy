@@ -55,9 +55,8 @@ export class BookingSummaryComponent implements OnInit {
 
   createPaymentSession() {
     return this.http.post<string>(
-      `http://localhost:8080/payment/create-session`,
+      `http://localhost:8080/payment/create-session/${this.userId}`,
       {},
-      { responseType: 'text' as 'json' }
     );
   }
 
@@ -82,12 +81,14 @@ export class BookingSummaryComponent implements OnInit {
     this.http.post(url, this.bookingData).subscribe((response: any) => {
       console.log(response);
       if (response?.status) {
-        this.createPaymentSession().subscribe((id) => {
-          const expiryDate = new Date();
-          expiryDate.setTime(expiryDate.getTime() + 5 * 60 * 1000);
-          document.cookie = `sessionId=${id}; expires=${expiryDate.toUTCString()}; path=/;`;
+        sessionStorage.setItem("bookingId", response?.bookingId)
+        sessionStorage.setItem("total", this.total.toString());
+        this.createPaymentSession().subscribe((time) => {
+          sessionStorage.setItem("creationTime", time)
+          
           this.router.navigate(['/booking/payment']);
         });
+
       } else {
         alert(response?.message);
         this.router.navigate(['/']);
