@@ -6,15 +6,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-payment',
   templateUrl: './payment.component.html',
-  styleUrls: ['./payment.component.css']
+  styleUrls: ['./payment.component.css'],
 })
 export class PaymentComponent implements OnInit {
-
   amount: number = 5310;
   method!: string;
+  userId: number = 1;
   timeRemaining: string = '00:00';
   timer: any;
-  expirationTime: number = 5 * 60 * 1000; // 5 minutes in milliseconds
+  expirationTime!: number;
   startTime!: number;
   isExpired: boolean = false;
 
@@ -23,7 +23,11 @@ export class PaymentComponent implements OnInit {
 
   paymentForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) { }
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
   getCookie(name: string): string | undefined {
     const value = `; ${document.cookie}`;
@@ -35,28 +39,37 @@ export class PaymentComponent implements OnInit {
   checkSessionValidity() {
     const sessionId = this.getCookie('sessionId');
     if (sessionId) {
-      this.http.get<boolean>(`http://localhost:8080/payment/validate-session?sessionId=${sessionId}`).subscribe((isValid) => {
-        this.sessionValid = isValid;
-        if (!this.sessionValid) {
-          console.log('Session expired.');
-          this.router.navigate(["/"]);
-        }
-      });
+      this.http
+        .get<boolean>(
+          `http://localhost:8080/payment/validate-session?userId=${this.userId}`
+        )
+        .subscribe((isValid) => {
+          this.sessionValid = isValid;
+          if (!this.sessionValid) {
+            console.log('Session expired.');
+            this.router.navigate(['/']);
+          }
+        });
     } else {
       console.log('No session found.');
-      this.router.navigate(["/"]);
+      this.router.navigate(['/']);
     }
   }
 
   ngOnInit() {
-    this.startTime = Date.now();
-    this.updateTimer();
-    this.paymentForm = this.fb.group({
-      amount: [this.amount, Validators.required],
-      method: ['', Validators.required]
-    })
+    const creationTime = sessionStorage.getItem('creationTime');
+    if (creationTime) {
+      const creationTimestamp = parseInt(creationTime, 10);
+      this.startTime = Date.now();
+      this.expirationTime = this.startTime - creationTimestamp;
+      this.updateTimer();
+      this.paymentForm = this.fb.group({
+        amount: [this.amount, Validators.required],
+        method: ['', Validators.required],
+      });
 
-    this.checkSessionValidity();
+      this.checkSessionValidity();
+    }
   }
 
   ngOnDestroy() {
@@ -64,8 +77,6 @@ export class PaymentComponent implements OnInit {
       clearInterval(this.timer);
     }
   }
-
-  
 
   updateTimer() {
     this.timer = setInterval(() => {
@@ -76,6 +87,7 @@ export class PaymentComponent implements OnInit {
         clearInterval(this.timer);
         this.isExpired = true;
         this.timeRemaining = '00:00';
+        this.router.navigate(["/"]);
       } else {
         const minutes = Math.floor(remaining / 60000);
         const seconds = Math.floor((remaining % 60000) / 1000);
@@ -90,6 +102,5 @@ export class PaymentComponent implements OnInit {
 
   pay() {
     console.log(this.paymentForm.value);
-
   }
 }
