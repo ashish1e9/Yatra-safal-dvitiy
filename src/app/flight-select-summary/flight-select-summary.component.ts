@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Flight, FlightView } from 'src/model/flight-summary';
 import { FlightService } from 'src/service/FlightService';
 
@@ -11,7 +12,7 @@ export class FlightSelectSummaryComponent implements OnInit {
   selectedOneWayFlight!:FlightView;
   selectedReturnFlight!:FlightView|null;
 
-  constructor(private flightService: FlightService) { 
+  constructor(private flightService: FlightService,private router: Router) { 
 
   }
 
@@ -22,6 +23,14 @@ export class FlightSelectSummaryComponent implements OnInit {
     console.log(this.selectedOneWayFlight); 
     this.selectedReturnFlight = this.flightService.getReturnFlight();
     console.log(this.selectedReturnFlight); 
+  }
+  handleBooking() {
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      this.router.navigate(['/seat']);
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 
 }
