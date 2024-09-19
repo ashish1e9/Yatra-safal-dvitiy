@@ -34,7 +34,7 @@ const routes: Routes = [
   { path: "admin", component: AdminLoginComponent },
   { path: "flight/add", component: AddFlightComponent },
   { path: "schedule/edit", component: EditScheduleComponent },
-  { path: "mytrips", component: MyTripsComponent }
+  { path: "mytrips", component: MyTripsComponent },
   {path: "booking/summary", component: BookingSummaryComponent},
   {path: "booking/payment", component: PaymentComponent},
   {path: 'seat/addPassenger', component: SelectPassengerComponent}

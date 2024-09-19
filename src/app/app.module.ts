@@ -24,6 +24,7 @@ import { PaymentComponent } from './payment/payment.component';
 import { TimeFormatPipe } from './time-format.pipe';
 import { SelectPassengerComponent } from './select-passenger/select-passenger.component';
 import { FlightReturnComponent } from './flight-return/flight-return.component';
+import { DownloadTicketComponent } from './download-ticket/download-ticket.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { FlightReturnComponent } from './flight-return/flight-return.component';
     PaymentComponent,
     TimeFormatPipe,
     SelectPassengerComponent,
-    FlightReturnComponent
+    FlightReturnComponent,
+    DownloadTicketComponent
   ],
   imports: [
     BrowserModule,
