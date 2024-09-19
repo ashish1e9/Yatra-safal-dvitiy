@@ -1,7 +1,27 @@
-<form action="#">
-    <label>Email:</label>
-    <input type="email"><br>
-    <label>Password:</label>
-    <input type="password"><br>
-    <button type="button" routerLink="/dashboard">Submit</button>
-</form>
+<div class="auth-container">
+    <h2>Admin Login</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()">
+        <label for="email">Email:</label>
+        <input id="email" formControlName="email" type="email" placeholder="Enter your email" />
+        <div *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched">
+            <small *ngIf="loginForm.controls['email'].errors?.['required']">Email is required</small>
+            <small *ngIf="loginForm.controls['email'].errors?.['email']">Invalid email format</small>
+        </div>
+        
+
+        <label for="password">Password:</label>
+        <input id="password" formControlName="password" type="password" placeholder="Enter your password" />
+        <div *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched">
+            <small *ngIf="loginForm.controls['password'].errors?.['required']">Password is required</small>
+        </div>
+
+        <button type="submit" [disabled]="loginForm.invalid">Login</button>
+    </form>
+
+    <div *ngIf="successMessage" class="alert alert-success">
+        {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+    </div>
+</div>

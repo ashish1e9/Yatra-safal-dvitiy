@@ -1,37 +1,141 @@
-<form action="#">
-    <label>Flight Number:</label>
-    <input type="text"><br>
-    <label>Arrival Time:</label>
-    <input type="time"><br>
-    <label>Departure Time:</label>
-    <input type="time"><br>
-    <label>Source:</label>
-    <input type="text"><br>
-    <label>Destination:</label>
-    <input type="text"><br>
-    <label>From Date:</label>
-    <input type="date"><br>
-    <label>To Date:</label>
-    <input type="date"><br>
-    <label>Economy Base Fare:</label>
-    <input type="number"><br>
-    <label>Business Base Fare:</label>
-    <input type="number"><br>
-    <br>
-    <label>Number of Economy Rows:</label>
-    <input type="number"><br>
-    <label>Number of Business Rows:</label>
-    <input type="number"><br>
-    
-    <br>
-    <p>Total Seats = 6 * (number of business rows + number of economy rows)</p>
-    <br>
-    <label>Aisle charge:</label>
-    <input type="number"><br>
-    <label>Window charge:</label>
-    <input type="number"><br>
-    <label>Middle charge:</label>
-    <input type="number"><br>
-    <br>
-    <button type="submit">Submit</button>
-</form>
+<div class="container mt-4">
+  <h2 class="mb-4">Add Flight</h2>
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <form [formGroup]="flightForm" (ngSubmit)="onSubmit()">
+    <!-- Flight Number and Airline ID -->
+    <div class="row mb-3 border p-3 rounded">
+      <div class="col-md-6 mb-2">
+        <label for="flight_no" class="form-label">Flight Number:</label>
+        <input id="flight_no" formControlName="flightNo" type="text" class="form-control" />
+        <div *ngIf="flightForm.get('flightNo')?.invalid && flightForm.get('flightNo')?.touched" class="text-danger small">
+          Flight number is required
+        </div>
+      </div>
+      <div class="col-md-6 mb-2">
+        <label for="airline_id" class="form-label">Airline ID:</label>
+        <input id="airline_id" formControlName="airlineId" type="number" class="form-control" />
+        <div *ngIf="flightForm.get('airlineId')?.invalid && flightForm.get('airlineId')?.touched" class="text-danger small">
+          Airline ID is required
+        </div>
+      </div>
+    </div>
+
+    <!-- Dates -->
+    <div class="row mb-3 border p-3 rounded">
+      <div class="col-md-6 mb-2">
+        <label for="from_date" class="form-label">From Date:</label>
+        <input id="from_date" formControlName="fromDate" type="date" class="form-control" />
+        <div *ngIf="flightForm.get('fromDate')?.invalid && flightForm.get('fromDate')?.touched" class="text-danger small">
+          From date is required
+        </div>
+      </div>
+      <div class="col-md-6 mb-2">
+        <label for="to_date" class="form-label">To Date:</label>
+        <input id="to_date" formControlName="toDate" type="date" class="form-control" />
+        <div *ngIf="flightForm.get('toDate')?.invalid && flightForm.get('toDate')?.touched" class="text-danger small">
+          To date is required
+        </div>
+      </div>
+    </div>
+
+    <!-- Times -->
+    <div class="row mb-3 border p-3 rounded">
+      <div class="col-md-6 mb-2">
+        <label for="departure_time" class="form-label">Departure Time:</label>
+        <input id="departure_time" formControlName="departureTime" type="time" class="form-control" />
+        <div *ngIf="flightForm.get('departureTime')?.invalid && flightForm.get('departureTime')?.touched" class="text-danger small">
+          Departure time is required
+        </div>
+      </div>
+      <div class="col-md-6 mb-2">
+        <label for="arrival_time" class="form-label">Arrival Time:</label>
+        <input id="arrival_time" formControlName="arrivalTime" type="time" class="form-control" />
+        <div *ngIf="flightForm.get('arrivalTime')?.invalid && flightForm.get('arrivalTime')?.touched" class="text-danger small">
+          Arrival time is required
+        </div>
+      </div>
+    </div>
+
+    <!-- Base Fares -->
+    <div class="row mb-3 border p-3 rounded">
+      <div class="col-md-6 mb-2">
+        <label for="economy_base_fare" class="form-label">Economy Base Fare:</label>
+        <input id="economy_base_fare" formControlName="economyBaseFare" type="number" step="100.0" class="form-control" />
+        <div *ngIf="flightForm.get('economyBaseFare')?.invalid && flightForm.get('economyBaseFare')?.touched" class="text-danger small">
+          Economy base fare must be a positive value
+        </div>
+      </div>
+      <div class="col-md-6 mb-2">
+        <label for="business_base_fare" class="form-label">Business Base Fare:</label>
+        <input id="business_base_fare" formControlName="businessBaseFare" type="number" step="500.0" class="form-control" />
+        <div *ngIf="flightForm.get('businessBaseFare')?.invalid && flightForm.get('businessBaseFare')?.touched" class="text-danger small">
+          Business base fare must be a positive value
+        </div>
+      </div>
+    </div>
+
+    <!-- Cities -->
+    <div class="row mb-3 border p-3 rounded">
+      <div class="col-md-6 mb-2">
+        <label for="source_city" class="form-label">Source City:</label>
+        <input id="source_city" formControlName="sourceCity" type="text" class="form-control" />
+        <div *ngIf="flightForm.get('sourceCity')?.invalid && flightForm.get('sourceCity')?.touched" class="text-danger small">
+          Source city is required
+        </div>
+      </div>
+      <div class="col-md-6 mb-2">
+        <label for="destination_city" class="form-label">Destination City:</label>
+        <input id="destination_city" formControlName="destinationCity" type="text" class="form-control" />
+        <div *ngIf="flightForm.get('destinationCity')?.invalid && flightForm.get('destinationCity')?.touched" class="text-danger small">
+          Destination city is required
+        </div>
+      </div>
+    </div>
+
+    <!-- Rows -->
+    <div class="row mb-3 border p-3 rounded">
+      <div class="col-md-4 mb-2">
+        <label for="number_of_economy_rows" class="form-label">Number of Economy Rows:</label>
+        <input id="number_of_economy_rows" formControlName="numberOfEconomyRows" type="number" class="form-control" />
+        <div *ngIf="flightForm.get('numberOfEconomyRows')?.invalid && flightForm.get('numberOfEconomyRows')?.touched" class="text-danger small">
+          Enter a valid number of economy rows
+        </div>
+      </div>
+      <div class="col-md-4 mb-2">
+        <label for="number_of_business_rows" class="form-label">Number of Business Rows:</label>
+        <input id="number_of_business_rows" formControlName="numberOfBusinessRows" type="number" class="form-control" />
+        <div *ngIf="flightForm.get('numberOfBusinessRows')?.invalid && flightForm.get('numberOfBusinessRows')?.touched" class="text-danger small">
+          Enter a valid number of business rows
+        </div>
+      </div>
+      <div class="col-md-4 mb-2">
+        <label for="aisle_charge" class="form-label">Aisle Charge:</label>
+        <input id="aisle_charge" formControlName="aisleCharge" type="number" class="form-control" />
+      </div>
+    </div>
+
+    <!-- Charges -->
+    <div class="row mb-3 border p-3 rounded">
+      <div class="col-md-4 mb-2">
+        <label for="window_charge" class="form-label">Window Charge:</label>
+        <input id="window_charge" formControlName="windowCharge" type="number" class="form-control" />
+      </div>
+      <div class="col-md-4 mb-2">
+        <label for="middle_charge" class="form-label">Middle Charge:</label>
+        <input id="middle_charge" formControlName="middleCharge" type="number" class="form-control" />
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <p class="text-muted">Total Seats = 6 * (number of business rows + number of economy rows)</p>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="!flightForm.valid">Submit</button>
+  </form>
+</div>

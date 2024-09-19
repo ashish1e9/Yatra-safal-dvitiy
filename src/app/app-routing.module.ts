@@ -25,9 +25,9 @@ const routes: Routes = [
   { path: 'footer', component: FooterComponent },
   { path: 'seat', component: SeatSelectionComponent },
   {path: "dashboard", component: AdminDashboardComponent},
-  {path: "admin", component: AdminLoginComponent},
-  {path: "flight/add", component: AddFlightComponent},
-  {path: "schedule/edit", component: EditScheduleComponent},
+  {path: "admin/login", component: AdminLoginComponent},
+  {path: "admin/flight/add", component: AddFlightComponent},
+  {path: "admin/schedule/edit", component: EditScheduleComponent},
 ];
 
 @NgModule({

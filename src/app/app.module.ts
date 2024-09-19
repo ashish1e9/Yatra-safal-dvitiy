@@ -10,14 +10,14 @@ import { FlightCardComponent } from './flight-card/flight-card.component';
 import { LoginComponent } from './login/login.component';
 import { FlightSearchComponent } from './flight-search/flight-search.component';
 import { SignupComponent } from './signup/signup.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';  
 import { HttpClientModule } from '@angular/common/http';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { SeatSelectionComponent } from './seat-selection/seat-selection.component';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
-import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
-import { AddFlightComponent } from './add-flight/add-flight.component';
 import { EditScheduleComponent } from './edit-schedule/edit-schedule.component';
+import { AddFlightComponent} from './add-flight/add-flight.component';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -32,14 +32,14 @@ import { EditScheduleComponent } from './edit-schedule/edit-schedule.component';
     LandingPageComponent,
     SeatSelectionComponent,
     AdminLoginComponent,
-    AdminDashboardComponent,
+    EditScheduleComponent,
     AddFlightComponent,
-    EditScheduleComponent
+    AdminDashboardComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule,  
     HttpClientModule,
   ],
   providers: [],

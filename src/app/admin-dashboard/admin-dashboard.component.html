@@ -1,17 +1,182 @@
-<button routerLink="/flight/add">Add Flight</button>
-<br><br>
-<div *ngFor="let flight of flightData">
-    Flight No: {{ flight.flightNo }}
-    totalSeats: {{flight.totalSeats }}
-      baseFare: {{flight.baseFare }}
-      source: {{flight.sourceCity }}
-      destination: {{flight.destinationCity }}
-      fromDate: {{flight.fromDate }}
-      toDate: {{flight.toDate }}
-      departureTime: {{flight.departureTime }}
-      arrivalTime: {{flight.arrivalTime }}
-      Status: {{flight.status}}
-    <button [id]="flight.flightId" routerLink="/schedule/edit" >Edit Schedule</button>
-    <button [id]="flight.flightId" >Cancel Schedule</button>
-      <hr>
+<div class="container mt-4">
+  <h2>Admin Dashboard</h2>
+  <div class="mb-3">
+    <a routerLink="/admin/flight/add" class="btn btn-success">Add Flight +</a>
+  </div>
+  
+  <!-- Search Section -->
+  <div class="search-section mb-4">
+    <form [formGroup]="searchForm" (ngSubmit)="searchFlights()">
+      <div class="input-group">
+        <input 
+          type="text" 
+          class="form-control" 
+          placeholder="Search by flight number"
+          name="searchTerm"
+          formControlName="searchTerm"
+        >
+        <button class="btn btn-secondary" type="submit">Search</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Flight List -->
+  <div class="row">
+    <h3 class="mb-4">Flight List</h3>
+    <div *ngFor="let flight of filteredFlights" class="col-md-4 mb-3">
+      <div class="card h-100">
+        <div class="card-body">
+          <p class="card-text">
+            <strong>Flight No:</strong> {{ flight.flightNo }}<br>
+            <strong>Total Seats:</strong> {{ flight.totalSeats }}<br>
+            <strong>Economy Base Fare:</strong> {{ flight.economyBaseFare }}<br>
+            <strong>Business Base Fare:</strong> {{ flight.businessBaseFare }}<br>
+            <strong>Source:</strong> {{ flight.sourceCity }}<br>
+            <strong>Destination:</strong> {{ flight.destinationCity }}<br>
+            <strong>From Date:</strong> {{ flight.fromDate }}<br>
+            <strong>To Date:</strong> {{ flight.toDate }}<br>
+            <strong>Departure Time:</strong> {{ flight.departureTime }}<br>
+            <strong>Arrival Time:</strong> {{ flight.arrivalTime }}<br>
+          </p>
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-primary btn-sm" (click)="editFlight(flight.id)" data-bs-toggle="modal" data-bs-target="#editFlightModal">Edit Flight</button>
+            <button class="btn btn-primary btn-sm" (click)="editSchedulesBetweenDates(flight.id)" data-bs-toggle="modal" data-bs-target="#editScheduleModal">Reschedule</button>
+            <button class="btn btn-danger btn-sm" (click)="editFlight(flight.id)" data-bs-toggle="modal" data-bs-target="#cancelScheduleModal">Cancel Schedule</button>
+            <button class="btn btn-secondary btn-sm" (click)="loadSchedules(flight.id)" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">View Schedules</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Edit Flight -->
+  <div class="modal fade" id="editFlightModal" tabindex="-1" aria-labelledby="editFlightModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editFlightModalLabel">Edit Flight Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="editFlightForm" (ngSubmit)="updateFlightDetails()">
+            <div class="mb-3">
+              <label for="arrivalTime" class="form-label">Arrival Time:</label>
+              <input id="arrivalTime" formControlName="arrivalTime" type="time" class="form-control" />
+            </div>
+            <div class="mb-3">
+              <label for="departureTime" class="form-label">Departure Time:</label>
+              <input id="departureTime" formControlName="departureTime" type="time" class="form-control" />
+            </div>
+            <div class="mb-3">
+              <label for="economyBaseFare" class="form-label">Economy Base Fare:</label>
+              <input id="economyBaseFare" formControlName="economyBaseFare" type="number" class="form-control" />
+            </div>
+            <div class="mb-3">
+              <label for="businessBaseFare" class="form-label">Business Base Fare:</label>
+              <input id="businessBaseFare" formControlName="businessBaseFare" type="number" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-success" [disabled]="!editFlightForm.valid">Update Flight Details</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Edit Schedule -->
+  <div class="modal fade" id="editScheduleModal" tabindex="-1" aria-labelledby="editScheduleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editScheduleModalLabel">Edit Schedule Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="editScheduleForm" (ngSubmit)="updateScheduleDetails()">
+            <div class="mb-3">
+              <label for="fromDate" class="form-label">From Date:</label>
+              <input id="fromDate" formControlName="fromDate" type="date" class="form-control" />
+            </div>
+            <div class="mb-3">
+              <label for="toDate" class="form-label">To Date:</label>
+              <input id="toDate" formControlName="toDate" type="date" class="form-control" />
+            </div>
+            <div class="mb-3">
+              <label for="departureTime" class="form-label">Departure Time:</label>
+              <input id="departureTime" formControlName="departureTime" type="time" class="form-control" />
+            </div>
+            <div class="mb-3">
+              <label for="arrivalTime" class="form-label">Arrival Time:</label>
+              <input id="arrivalTime" formControlName="arrivalTime" type="time" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-success" [disabled]="!editScheduleForm.valid">Update Schedule Details</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Cancel Schedule -->
+  <div class="modal fade" id="cancelScheduleModal" tabindex="-1" aria-labelledby="cancelScheduleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cancelScheduleModalLabel">Cancel Schedule</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="cancelScheduleForm" (ngSubmit)="cancelSchedule()">
+            <div class="mb-3">
+              <label for="fromDateCancel" class="form-label">From Date:</label>
+              <input id="fromDateCancel" formControlName="fromDate" type="date" class="form-control" />
+            </div>
+            <div class="mb-3">
+              <label for="toDateCancel" class="form-label">To Date:</label>
+              <input id="toDateCancel" formControlName="toDate" type="date" class="form-control" />
+            </div>
+            <div class="alert alert-warning">
+              Are you sure you want to cancel the schedules between these dates?
+            </div>
+            <!-- Response Section -->
+            <div *ngIf="cancelResponse" class="alert" [ngClass]="{'alert-success': cancelResponse.success, 'alert-danger': !cancelResponse.success}">
+              <strong>{{ cancelResponse.success ? 'Success!' : 'Error!' }}</strong> 
+              <p>Number of schedules affected: {{ cancelResponse.noOfSchedules }}</p>
+              <p>{{ cancelResponse.message }}</p>
+            </div>
+            <button type="submit" class="btn btn-danger" [disabled]="!cancelScheduleForm.valid">Cancel Schedule</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+<!-- Modal for View Schedules -->
+<div class="modal fade" id="viewSchedulesModal" tabindex="-1" aria-labelledby="viewSchedulesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewSchedulesModalLabel">Flight Schedules</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Schedule List -->
+        <div *ngIf="selectedSchedule && selectedSchedule.length > 0">
+          <div *ngFor="let schedule of selectedSchedule" class="card mb-3">
+            <div class="card-body">
+              <p class="card-text">
+                <strong>Schedule ID:</strong> {{ schedule.id }}<br>
+                <strong>Departure Time:</strong> {{ schedule.departureTime }}<br>
+                <strong>Arrival Time:</strong> {{ schedule.arrivalTime }}<br>
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- No Schedules Found Message -->
+        <div *ngIf="selectedSchedule && selectedSchedule.length === 0">
+          <p>No schedules found for this flight.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
