@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import * as bootstrap from 'bootstrap';
+import { Router } from '@angular/router';
 
 
 export interface Seat {
@@ -25,7 +26,7 @@ export class SeatSelectionComponent implements OnInit {
   isTooltipVisible: boolean = false;
   tooltipStyle: { [key: string]: string } = {};
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private router: Router) { }
 
   ngOnInit() {
     this.fetchSeatData();
@@ -135,7 +136,7 @@ export class SeatSelectionComponent implements OnInit {
   submitSelection() {
     const selectedSeats = this.getSelectedSeats();
     localStorage.setItem('selectedSeats', JSON.stringify(selectedSeats));
-
+    this.router.navigate(['/seat/addPassenger'])
     console.log('Selected Seats:', selectedSeats);
   }
 }

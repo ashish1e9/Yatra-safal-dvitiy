@@ -1,11 +1,53 @@
-<div>
-    <form action="">
-        <label for="">email</label>
-        <input type="text" rewquired><br>
-        <label for="">password</label>
-        <input type="password" required><br>
-        <button type="submit">Login</button><br>
-        <a href="">Forget password ?</a><br>
-        <a routerLink="/signup">Don't have account SignUp</a>
-    </form>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4>Login</h4>
+                </div>
+                <div class="card-body">
+                    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input 
+                                type="text" 
+                                name="email" 
+                                required 
+                                [(ngModel)]="email" 
+                                #emailInput="ngModel" 
+                                class="form-control" 
+                                placeholder="Enter your email">
+                            <div *ngIf="emailInput.invalid && emailInput.touched" class="text-danger">
+                                <small *ngIf="emailInput.errors?.['required']">Email is required.</small>
+                                <small *ngIf="emailInput.errors?.['email']">Please enter a valid email.</small>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input 
+                                type="password" 
+                                name="password" 
+                                required 
+                                [(ngModel)]="password" 
+                                #passwordInput="ngModel" 
+                                class="form-control" 
+                                placeholder="Enter your password">
+                            <div *ngIf="passwordInput.invalid && passwordInput.touched" class="text-danger">
+                                <small *ngIf="passwordInput.errors?.['required']">Password is required.</small>
+                                <small *ngIf="passwordInput.errors?.['minlength']">Password must be at least 6 characters long.</small>
+                            </div>
+                        </div>
+                        <button 
+                            type="submit" 
+                            class="btn btn-primary w-100" 
+                            [disabled]="loginForm.invalid">Login</button>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="#" class="text-muted">Forgot password?</a><br>
+                    <a routerLink="/signup" class="text-muted">Don't have an account? Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

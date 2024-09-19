@@ -6,7 +6,7 @@
 
   <!-- Modal for Adding New Passenger -->
   <div class="modal fade" id="addPassengerModal" tabindex="-1" aria-labelledby="addPassengerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="addPassengerModalLabel">Add New Passenger</h5>
@@ -14,28 +14,33 @@
         </div>
         <div class="modal-body">
           <form (ngSubmit)="addNewPassenger()">
-            <div class="mb-3">
-              <label for="firstName" class="form-label">First Name</label>
-              <input type="text" id="firstName" class="form-control" [(ngModel)]="newPassenger.firstName" name="firstName" required>
-            </div>
-            <div class="mb-3">
-              <label for="lastName" class="form-label">Last Name</label>
-              <input type="text" id="lastName" class="form-control" [(ngModel)]="newPassenger.lastName" name="lastName" required>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="firstName" class="form-label">First Name</label>
+                <input type="text" id="firstName" class="form-control" [(ngModel)]="newPassenger.firstName" name="firstName" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input type="text" id="lastName" class="form-control" [(ngModel)]="newPassenger.lastName" name="lastName" required>
+              </div>
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
               <input type="email" id="email" class="form-control" [(ngModel)]="newPassenger.email" name="email" required>
             </div>
-            <div class="mb-3">
-              <label for="gender" class="form-label">Gender</label>
-              <select id="gender" class="form-control" [(ngModel)]="newPassenger.gender" name="gender" required>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="passportNo" class="form-label">Passport No</label>
-              <input type="text" id="passportNo" class="form-control" [(ngModel)]="newPassenger.passportNo" name="passportNo" required>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="gender" class="form-label">Gender</label>
+                <select id="gender" class="form-select" [(ngModel)]="newPassenger.gender" name="gender" required>
+                  <option value="" disabled selected>Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="passportNo" class="form-label">Passport No</label>
+                <input type="text" id="passportNo" class="form-control" [(ngModel)]="newPassenger.passportNo" name="passportNo" required>
+              </div>
             </div>
             <button type="submit" class="btn btn-primary">Add Passenger</button>
           </form>
@@ -65,10 +70,8 @@
     <h3>Assign Seats</h3>
     <div class="row">
       <div *ngFor="let seat of selectedSeats" class="col-md-2 mb-2">
-        <button class="btn btn-outline-primary"
-                [ngClass]="{
-                  'btn-secondary': seatAssignments[seat.seatId] === selectedPassenger
-                }"
+        <button class="btn btn-outline-primary w-100"
+                [ngClass]="{'btn-secondary': seatAssignments[seat.seatId] === selectedPassenger}"
                 (click)="assignSeatToPassenger(seat)"
                 [disabled]="seatAssignments[seat.seatId]">
           {{ seat.seatNo }}
@@ -77,5 +80,8 @@
     </div>
   </div>
   
-  <button class="btn btn-success mt-3" [disabled]="!allSeatsAssigned()" (click)="saveAssignments()">Save Assignments</button>
+  <div class="mt-3">
+    <button class="btn btn-success" [disabled]="!allSeatsAssigned()" (click)="saveAssignments()">Save Assignments</button>
+    <button class="btn btn-danger m-3" (click)="resetSelections()">Reset Selections</button>
+  </div>
 </div>

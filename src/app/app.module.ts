@@ -20,6 +20,9 @@ import { AdminLoginComponent } from './admin-login/admin-login.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { AddFlightComponent } from './add-flight/add-flight.component';
 import { EditScheduleComponent } from './edit-schedule/edit-schedule.component';
+import { BookingSummaryComponent } from './booking-summary/booking-summary.component';
+import { PaymentComponent } from './payment/payment.component';
+import { TimeFormatPipe } from './time-format.pipe';
 import { SelectPassengerComponent } from './select-passenger/select-passenger.component';
 import { FlightReturnComponent } from './flight-return/flight-return.component';
 import { FlightSelectSummaryComponent } from './flight-select-summary/flight-select-summary.component';
@@ -41,6 +44,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AdminDashboardComponent,
     AddFlightComponent,
     EditScheduleComponent,
+    BookingSummaryComponent,
+    PaymentComponent,
+    TimeFormatPipe,
     SelectPassengerComponent,
     FlightReturnComponent,
     FlightSelectSummaryComponent
