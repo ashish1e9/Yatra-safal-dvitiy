@@ -81,10 +81,14 @@ export class BookingSummaryComponent implements OnInit {
     this.http.post(url, this.bookingData).subscribe((response: any) => {
       console.log(response);
       if (response?.status) {
+        sessionStorage.setItem("bookingId", response?.bookingId)
+        sessionStorage.setItem("total", this.total.toString());
         this.createPaymentSession().subscribe((time) => {
           sessionStorage.setItem("creationTime", time)
+          
           this.router.navigate(['/booking/payment']);
         });
+
       } else {
         alert(response?.message);
         this.router.navigate(['/']);
