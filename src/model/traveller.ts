@@ -4,9 +4,8 @@ import { Gender } from "./gender-enum";
 interface Seat {
     seatId: number;
     seatNo: string;
-    flightScheduleId: number; // will be recieved from localstorage
     cost: number;
-    class: FlightClass; // will be recieved from localstorage
+    selected: boolean;
 }
 
 export interface Traveller {
@@ -16,6 +15,5 @@ export interface Traveller {
     lastName: string;
     email: string;
     gender: Gender;
-    passportNo: string;
     seat: Seat;
 }

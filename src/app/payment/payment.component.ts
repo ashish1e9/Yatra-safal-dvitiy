@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-payment',
@@ -17,9 +18,35 @@ export class PaymentComponent implements OnInit {
   startTime!: number;
   isExpired: boolean = false;
 
+  sessionId: string | null = null;
+  sessionValid: boolean = false;
+
   paymentForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) { }
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) { }
+
+  getCookie(name: string): string | undefined {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()!.split(';').shift();
+    return undefined;
+  }
+
+  checkSessionValidity() {
+    const sessionId = this.getCookie('sessionId');
+    if (sessionId) {
+      this.http.get<boolean>(`http://localhost:8080/payment/validate-session?sessionId=${sessionId}`).subscribe((isValid) => {
+        this.sessionValid = isValid;
+        if (!this.sessionValid) {
+          console.log('Session expired.');
+          this.router.navigate(["/"]);
+        }
+      });
+    } else {
+      console.log('No session found.');
+      this.router.navigate(["/"]);
+    }
+  }
 
   ngOnInit() {
     this.startTime = Date.now();
@@ -28,6 +55,8 @@ export class PaymentComponent implements OnInit {
       amount: [this.amount, Validators.required],
       method: ['', Validators.required]
     })
+
+    this.checkSessionValidity();
   }
 
   ngOnDestroy() {

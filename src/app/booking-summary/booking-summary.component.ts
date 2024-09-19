@@ -2,6 +2,8 @@ import { Time } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
+import { BookingData, SeatId } from 'src/model/booking-data';
 import { FlightClass } from 'src/model/flight-class-enum';
 import { FlightSummary } from 'src/model/flight-summary';
 import { Gender } from 'src/model/gender-enum';
@@ -13,27 +15,32 @@ import { Traveller } from 'src/model/traveller';
   styleUrls: ['./booking-summary.component.css'],
 })
 export class BookingSummaryComponent implements OnInit {
-  flightScheduleId : number = 2;
-  flightClass: string = "ECONOMY";
+  bookingData!: BookingData;
+  flightScheduleId: number = 2;
+  userId: number = 1;
+  flightClass: string = 'ECONOMY';
   flightSummary!: FlightSummary[];
   flightType!: string;
   travellers!: Traveller[];
   seatCharges: number = 0;
-  totalBaseFare : number = 0;
+  totalBaseFare: number = 0;
   tax: number = 0;
   total: number = 0;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {}
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
   parseTime(timeString: string): Time {
     const [hours, minutes] = timeString.split(':').map(Number);
     return { hours, minutes };
   }
 
-  percentage(extra: number, base:number) : number {
-    return (18*(base + extra)) / 100;
- } 
- 
+  percentage(extra: number, base: number): number {
+    return (18 * (base + extra)) / 100;
+  }
 
   // formatTime(hours: number, minutes: number): string {
   //   // Pad hours and minutes with leading zeros if needed
@@ -42,62 +49,119 @@ export class BookingSummaryComponent implements OnInit {
   //   return `${hours}:${minutes}`;
   // }
 
-
   genderToString(gender: Gender): string {
     return Gender[gender][0];
   }
 
+  createPaymentSession() {
+    return this.http.post<string>(
+      `http://localhost:8080/payment/create-session`,
+      {},
+      { responseType: 'text' as 'json' }
+    );
+  }
+
+  goToPay() {
+    let seats: SeatId[] = [];
+    this.travellers.map((tr) => {
+      seats.push({
+        seatId: tr.seat.seatId,
+      });
+    });
+
+    console.log('SEATS', seats);
+
+    this.bookingData = {
+      flightScheduleId: this.flightScheduleId,
+      userId: this.userId,
+      passengers: seats,
+    };
+
+    let url = 'http://localhost:8080/booking/add';
+
+    this.http.post(url, this.bookingData).subscribe((response: any) => {
+      console.log(response);
+      if (response?.status) {
+        this.createPaymentSession().subscribe((id) => {
+          const expiryDate = new Date();
+          expiryDate.setTime(expiryDate.getTime() + 5 * 60 * 1000);
+          document.cookie = `sessionId=${id}; expires=${expiryDate.toUTCString()}; path=/;`;
+          this.router.navigate(['/booking/payment']);
+        });
+      } else {
+        alert(response?.message);
+        this.router.navigate(['/']);
+      }
+    });
+  }
+
   ngOnInit(): void {
+    if (localStorage.getItem('passengerAssignments')) {
+      this.travellers = JSON.parse(
+        localStorage.getItem('passengerAssignments')!
+      );
+      console.log('Travellers: ', this.travellers);
+    } else {
+      console.log('INVALID');
+      this.router.navigate(['/']);
+    }
 
     let url = `http://localhost:8080/flight/summary?flightScheduleId=${this.flightScheduleId}&flightClass=${this.flightClass}`;
     this.http.get<FlightSummary[]>(url).subscribe((response) => {
       console.log(response);
       this.flightSummary = response;
-      this.tax = this.percentage(this.flightSummary[0].baseFare, this.seatCharges);
+      this.tax = this.percentage(
+        this.flightSummary[0].baseFare * this.travellers.length,
+        this.seatCharges
+      );
 
-    this.total += this.tax + this.seatCharges + this.flightSummary[0].baseFare;
+      this.total +=
+        this.tax +
+        this.seatCharges +
+        this.flightSummary[0].baseFare * this.travellers.length;
     });
 
-    this.travellers = [
-      {
-        passengerId: 1,
-        userId: 1,
-        firstName: 'a',
-        lastName: 'b',
-        email: 'ab@gmail.com',
-        gender: Gender.MALE,
-        passportNo: 'ab12',
-        seat: {
-          seatId: 225,
-          seatNo: 'A1',
-          flightScheduleId: 1,
-          cost: 500,
-          class: FlightClass.ECONOMY,
-        },
-      },
-      {
-        passengerId: 2,
-        userId: 1,
-        firstName: 'c',
-        lastName: 'd',
-        email: 'cd@gmail.com',
-        gender: Gender.MALE,
-        passportNo: 'cd12',
-        seat: {
-          seatId: 226,
-          seatNo: 'A2',
-          flightScheduleId: 1,
-          cost: 0,
-          class: FlightClass.ECONOMY,
-        },
-      },
-    ];
+    // this.travellers = [
+    //   {
+    //     passengerId: 1,
+    //     userId: 1,
+    //     firstName: 'a',
+    //     lastName: 'b',
+    //     email: 'ab@gmail.com',
+    //     gender: Gender.MALE,
+    //     passportNo: 'ab12',
+    //     seat: {
+    //       seatId: 225,
+    //       seatNo: 'A1',
+    //       flightScheduleId: 1,
+    //       cost: 500,
+    //       class: FlightClass.ECONOMY,
+    //     },
+    //   },
+    //   {
+    //     passengerId: 2,
+    //     userId: 1,
+    //     firstName: 'c',
+    //     lastName: 'd',
+    //     email: 'cd@gmail.com',
+    //     gender: Gender.MALE,
+    //     passportNo: 'cd12',
+    //     seat: {
+    //       seatId: 226,
+    //       seatNo: 'A2',
+    //       flightScheduleId: 1,
+    //       cost: 0,
+    //       class: FlightClass.ECONOMY,
+    //     },
+    //   },
+    // ];
 
     this.travellers.map((tr) => {
-      this.http.get<number>(`http://localhost:8080/flight/cost?seatId=${tr.seat.seatId}`).subscribe((cost) => this.seatCharges += cost  );
+      this.http
+        .get<number>(
+          `http://localhost:8080/flight/cost?seatId=${tr.seat.seatId}`
+        )
+        .subscribe((cost) => (this.seatCharges += cost));
     });
-
-    
-    
   }
 }
