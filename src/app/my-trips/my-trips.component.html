@@ -1,0 +1,153 @@
+<!-- <h1>My Trips works</h1>
+<div class="container">
+    <h2>Booking History</h2>
+  
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Ticket ID</th>
+          <th>Booking Date</th>
+          <th>Seats Booked</th>
+          <th>Passenger Name</th>
+          <th>Passport No</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let history of bookings">
+          <td>{{ history.ticketId }}</td>
+          <td>{{ history.bookingDate | date: 'mediumDate' }}</td>
+          <td>{{ history.seatsBooked }}</td>
+          <td>{{ history.passengerName }}</td>
+          <td>{{ history.passportNo }}</td>
+          <td>{{ history.email }}</td>
+          <button class="btn btn-danger" (click)="cancelBooking(history.ticketId)">Cancel</button>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+   -->
+<navbar></navbar>
+<!--<div class="container">
+    <div *ngFor="let card of bookingHistoryCard" class="card my-3" #pdfTable>
+        <div class="card-header">
+        <h5 class="card-title">
+            Booking #{{ card.bookingId }} - {{ card.airlineName }}
+        </h5>
+        <p class="card-text">Flight No: {{ card.flightNo }}</p>
+        <p class="card-text">Booking Date: {{ card.bookingDate | date: 'medium' }}</p>
+        </div>
+
+        <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted">
+            {{ card.sourceCity }} to {{ card.destinationCity }}
+        </h6>
+        <p class="card-text">Seats Booked: {{ card.seatsBooked }}</p>
+        <p class="card-text">Departure: {{ card.departureTime | timeFormat }}</p>
+        <p class="card-text">Arrival: {{ card.arrivalTime | timeFormat }}</p>
+
+        <div *ngFor="let history of card.bookingHistory" class="border p-3 mb-2">
+            <strong>Passenger:</strong> {{ history.passengerName }} <br>
+            <strong>Seat No:</strong> {{ history.seatNo }} <br>
+            <strong>Passport No:</strong> {{ history.passportNo }} <br>
+            <strong>Email:</strong> {{ history.email }} <br><br>
+            <button class="btn btn-danger" (click)="cancelBooking(history.ticketId, history.seatId)">Cancel</button>
+        </div>
+        </div>
+        <button (click)="downloadAsPDF()" class="btn btn-primary">Download Boarding Pass</button>
+    </div>
+</div> -->
+
+<!-- Booking Cards -->
+<!-- Booking Cards -->
+<div class="container">
+    <div class="upcomingFlights">
+        <h2>Upcoming Flights</h2>
+        <div *ngFor="let card of upcomingBooking" class="card my-3">
+
+            <div class="heading">
+                <h5 class="card-title">
+                    Booking #{{ card.bookingId }} - {{ card.airlineName }}
+                </h5>
+                <p class="card-text">Booking Date: {{ card.bookingDate | date: 'medium' }}</p>
+            </div>
+            <!-- <p class="card-text">Seats Booked: {{ card.seatsBooked }}</p> -->
+            <div class="modal-body">
+                <div *ngFor="let history of card.bookingHistory" class="border p-3 mb-2 boarding-pass">
+                    <download-ticket [card]="card" [history]="history"></download-ticket>
+                    <div class="no-print">
+                        <div class="cen no-print">
+                            <button class="btn btn-danger no-print"
+                                (click)="cancelBooking(history.ticketId, history.seatId)">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" (click)="downloadAsPDF(selectedCard?.bookingId)" class="btn btn-primary">Download
+                Boarding Pass</button>
+        </div>
+    </div>
+    <div class="PreviousFlights">
+        <h2>Previous Flights</h2>
+        <div *ngFor="let card of previousBooking" class="card my-3">
+            <div class="card-header">
+                <h5 class="card-title">
+                    Booking #{{ card.bookingId }} - {{ card.airlineName }}
+                </h5>
+                <p class="card-text">Flight No: {{ card.flightNo }}</p>
+                <p class="card-text">Booking Date: {{ card.bookingDate | date: 'medium' }}</p>
+            </div>
+
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">
+                    {{ card.sourceCity }} to {{ card.destinationCity }}
+                </h6>
+                <p class="card-text">Seats Booked: {{ card.seatsBooked }}</p>
+                <p class="card-text">Departure: {{ card.departureTime | timeFormat }}</p>
+                <p class="card-text">Arrival: {{ card.arrivalTime | timeFormat }}</p>
+
+                <div *ngFor="let history of card.bookingHistory" class="border p-3 mb-2">
+                    <strong>Passenger:</strong> {{ history.passengerName }} <br>
+                    <strong>Seat No:</strong> {{ history.seatNo }} <br>
+                    <strong>Passport No:</strong> {{ history.passportNo }} <br>
+                    <strong>Email:</strong> {{ history.email }} <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Structure -->
+<!-- <div *ngIf="selectedCard" class="modal fade show d-block" tabindex="-1" role="dialog"
+    aria-labelledby="boardingPassModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="boardingPassModalLabel">Boarding Pass - Booking #{{ selectedCard?.bookingId
+                    }}</h5>
+            </div>
+            <div class="modal-body">
+                <p><strong>Airline:</strong> {{ selectedCard?.airlineName }}</p>
+                <p><strong>Flight No:</strong> {{ selectedCard?.flightNo }}</p>
+                <p><strong>Source:</strong> {{ selectedCard?.sourceCity }}</p>
+                <p><strong>Destination:</strong> {{ selectedCard?.destinationCity }}</p>
+                <p><strong>Seats Booked:</strong> {{ selectedCard?.seatsBooked }}</p>
+                <p><strong>Departure Time:</strong> {{ selectedCard?.departureTime! | timeFormat }}</p>
+          <p><strong>Arrival Time:</strong> {{ selectedCard?.arrivalTime! | timeFormat }}</p>
+                <hr>
+                <div *ngFor="let history of selectedCard?.bookingHistory">
+                    <p><strong>Passenger:</strong> {{ history.passengerName }}</p>
+                    <p><strong>Seat No:</strong> {{ history.seatNo }}</p>
+                    <p><strong>Passport No:</strong> {{ history.passportNo }}</p>
+                    <p><strong>Email:</strong> {{ history.email }}</p>
+                    <hr>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+                
+            </div>
+        </div>
+    </div>
+</div> -->

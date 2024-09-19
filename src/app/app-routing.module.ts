@@ -13,6 +13,7 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 import { EditScheduleComponent } from './edit-schedule/edit-schedule.component';
 import { AddFlightComponent } from './add-flight/add-flight.component';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
+import { MyTripsComponent } from './my-trips/my-trips.component';
 import { BookingSummaryComponent } from './booking-summary/booking-summary.component';
 import { PaymentComponent } from './payment/payment.component';
 import {SelectPassengerComponent} from './select-passenger/select-passenger.component'
@@ -31,10 +32,11 @@ const routes: Routes = [
   { path: 'header', component: HeaderComponent },
   { path: 'footer', component: FooterComponent },
   { path: 'seat', component: SeatSelectionComponent },
-  {path: "dashboard", component: AdminDashboardComponent},
-  {path: "admin", component: AdminLoginComponent},
-  {path: "flight/add", component: AddFlightComponent},
-  {path: "schedule/edit", component: EditScheduleComponent},
+  { path: "dashboard", component: AdminDashboardComponent },
+  { path: "admin", component: AdminLoginComponent },
+  { path: "flight/add", component: AddFlightComponent },
+  { path: "schedule/edit", component: EditScheduleComponent },
+  { path: "mytrips", component: MyTripsComponent },
   {path: "booking/summary", component: BookingSummaryComponent},
   {path: "booking/payment", component: PaymentComponent},
   {path: 'seat/addPassenger', component: SelectPassengerComponent}
