@@ -18,6 +18,7 @@ import { BookingSummaryComponent } from './booking-summary/booking-summary.compo
 import { PaymentComponent } from './payment/payment.component';
 import {SelectPassengerComponent} from './select-passenger/select-passenger.component'
 import { FlightReturnComponent } from './flight-return/flight-return.component';
+import { FlightSelectSummaryComponent } from './flight-select-summary/flight-select-summary.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'signup', component: SignupComponent },
   { path: 'flight/search', component: FlightSearchComponent },
   { path: 'flight/return', component: FlightReturnComponent },
+  { path: 'flight/view', component: FlightSelectSummaryComponent },
   { path: 'flight/card', component: FlightCardComponent },
   { path: 'navbar', component: NavbarComponent },
   { path: 'header', component: HeaderComponent },

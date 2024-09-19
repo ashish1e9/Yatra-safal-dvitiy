@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import * as bootstrap from 'bootstrap';
+import { Router } from '@angular/router';
 
 
 export interface Seat {
@@ -24,8 +25,11 @@ export class SeatSelectionComponent implements OnInit {
   hoveredSeat: Seat | null = null;
   isTooltipVisible: boolean = false;
   tooltipStyle: { [key: string]: string } = {};
+  flightScheduleId: number = 0;
+  noOfPassengers: number = 0;
+  
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private router: Router) { }
 
   ngOnInit() {
     this.fetchSeatData();
@@ -38,9 +42,9 @@ export class SeatSelectionComponent implements OnInit {
 
   fetchSeatData() {
     const params = new HttpParams()
-      .set('flightScheduleId', '10')
-      .set('numberOfSeats', '2')
-      .set('flightClass', 'ECONOMY');
+      .set('flightScheduleId',localStorage.getItem('flightScheduleId') || '')
+      .set('numberOfSeats', localStorage.getItem('noOfSeats') || '')
+      .set('flightClass', localStorage.getItem('flightClass') || '');
 
     this.http.get<any>('http://localhost:8080/flight/fetchFlightStatus', { params })
       .subscribe(response => {
@@ -79,15 +83,33 @@ export class SeatSelectionComponent implements OnInit {
 
   toggleSeatSelection(rowIndex: number, colIndex: number) {
     const seat = this.seatSelection[rowIndex][colIndex];
+    const minSeats = parseInt(localStorage.getItem('noOfSeats') || '0', 10); // Minimum seats
+    const maxSeats = 10; // Maximum seats
+  
     if (seat.cost !== undefined) {
-      seat.selected = !seat.selected;
       if (seat.selected) {
-        this.selectedSeats.push(seat);
-      } else {
+        seat.selected = false;
         this.selectedSeats = this.selectedSeats.filter(s => s.seatId !== seat.seatId);
+      } else {
+        if (this.selectedSeats.length < maxSeats) {
+          seat.selected = true;
+          this.selectedSeats.push(seat);
+  
+          // Check if the current selection meets the minimum requirement
+          if (this.selectedSeats.length > maxSeats) {
+            alert(`You can only select up to ${maxSeats} seats.`);
+            seat.selected = false;
+            this.selectedSeats = this.selectedSeats.filter(s => s.seatId !== seat.seatId);
+          } 
+        } else {
+          alert(`You can only select up to ${maxSeats} seats.`);
+        }
       }
     }
+  
   }
+  
+  
 
   isSeatAvailable(rowIndex: number, colIndex: number): boolean {
     return this.seatSelection[rowIndex][colIndex].cost !== undefined && !this.seatSelection[rowIndex][colIndex].selected;
@@ -105,37 +127,22 @@ export class SeatSelectionComponent implements OnInit {
     });
   }
 
-  // showTooltip(rowIndex: number, colIndex: number) {
-  //   const seat = this.seatSelection[rowIndex][colIndex];
-  //   if (seat.cost) {
-  //     this.isTooltipVisible = true;
-  //     this.tooltipStyle = {
-  //       position: 'absolute',
-  //       bottom: '100%', // Position it above the seat
-  //       left: '50%',
-  //       transform: 'translateX(-50%)',
-  //       backgroundColor: '#333',
-  //       color: '#fff',
-  //       padding: '5px',
-  //       borderRadius: '4px',
-  //       whiteSpace: 'nowrap',
-  //       fontSize: '12px',
-  //     };
-  //   }
-  // }
-
-  // hideTooltip() {
-  //   this.isTooltipVisible = false;
-  // }
 
   getSelectedSeats(): Seat[] {
     return this.selectedSeats;
   }
 
   submitSelection() {
-    const selectedSeats = this.getSelectedSeats();
-    localStorage.setItem('selectedSeats', JSON.stringify(selectedSeats));
-
-    console.log('Selected Seats:', selectedSeats);
+    const minSeats = parseInt(localStorage.getItem('noOfSeats') || '0', 10);
+    
+    if (this.selectedSeats.length < minSeats) {
+      alert(`You must select at least ${minSeats} seats.`);
+      return;
+    }
+  
+    localStorage.setItem('selectedSeats', JSON.stringify(this.selectedSeats));
+    this.router.navigate(['/seat/addPassenger']);
+    console.log('Selected Seats:', this.selectedSeats);
   }
+  
 }

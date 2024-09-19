@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 interface Passenger {
   passengerId: number;
@@ -31,7 +32,7 @@ export class SelectPassengerComponent implements OnInit {
   seatAssignments: { [seatId: number]: Passenger } = {};
   selectedPassenger: Passenger | null = null;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
     this.fetchPassengers();
@@ -77,6 +78,7 @@ export class SelectPassengerComponent implements OnInit {
   }
 
   addNewPassenger() {
+    alert('New passenger added!');
     const passengerData = {
       gender: this.newPassenger.gender.toUpperCase(),
       firstName: this.newPassenger.firstName,
@@ -86,10 +88,10 @@ export class SelectPassengerComponent implements OnInit {
       userId: 1 // Hardcoded user ID
     };
   
-    this.http.post<{ passengerId: number }>('http://localhost:8080/user/addPassenger', passengerData).subscribe(response => {
-      // Assuming the response contains the newly created passengerId
+    this.http.post<number>('http://localhost:8080/user/addPassenger', passengerData).subscribe(passengerId => {
+      // Create a new passenger object using the returned passengerId
       const newPassenger: Passenger = {
-        passengerId: response.passengerId,
+        passengerId: passengerId, // Use the returned ID
         firstName: this.newPassenger.firstName,
         lastName: this.newPassenger.lastName,
         passportNo: this.newPassenger.passportNo,
@@ -98,6 +100,12 @@ export class SelectPassengerComponent implements OnInit {
       };
   
       this.passengers.push(newPassenger);
+  
+      if (this.passengerSelections[newPassenger.passengerId]) {
+        const assignedSeat = this.passengerSelections[newPassenger.passengerId];
+        this.seatAssignments[assignedSeat.seatId] = newPassenger; // Assign the seat to the new passenger
+      }
+  
       this.newPassenger = { passengerId: 0, firstName: '', lastName: '', passportNo: '', email: '', gender: '' }; // Reset form
     }, error => {
       console.error('Error adding passenger', error);
@@ -108,19 +116,19 @@ export class SelectPassengerComponent implements OnInit {
   saveAssignments() {
     const assignments = Object.keys(this.passengerSelections).map(key => {
       const seat = this.passengerSelections[parseInt(key, 10)];
-      const passenger = this.passengers.find(p => p.passengerId === parseInt(key, 10)); // Find the passenger by ID
-  
+      const passenger = this.passengers.find(p => p.passengerId === parseInt(key, 10)); 
       return {
-        passengerId: passenger ? passenger.passengerId : 0, // Use 0 for new passenger
-        firstName: passenger ? passenger.firstName : '', // Use empty string if passenger not found
+        passengerId: passenger ? passenger.passengerId : 0, 
+        firstName: passenger ? passenger.firstName : '', 
         lastName: passenger ? passenger.lastName : '',
         email: passenger ? passenger.email : '',
         gender: passenger ? passenger.gender : '',
-        seat: seat // Seat assigned to the passenger
+        seat: seat 
       };
     });
   
     localStorage.setItem('passengerAssignments', JSON.stringify(assignments));
+    this.router.navigate(['/booking/summary'])
   }
   
   
@@ -128,5 +136,18 @@ export class SelectPassengerComponent implements OnInit {
     // Check if all selected seats have been assigned to a passenger
     return this.selectedSeats.every(seat => this.seatAssignments[seat.seatId] !== undefined);
   }
+
+  resetSelections() {
+    this.newPassenger = { passengerId: 0, firstName: '', lastName: '', passportNo: '', email: '', gender: '' };
+    
+    this.selectedPassenger = null;
+    
+    this.passengerSelections = {};
+    this.seatAssignments = {};
+    
+    
+    this.fetchPassengers(); 
+  }
+  
 }
 

@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,6 +26,8 @@ import { PaymentComponent } from './payment/payment.component';
 import { TimeFormatPipe } from './time-format.pipe';
 import { SelectPassengerComponent } from './select-passenger/select-passenger.component';
 import { FlightReturnComponent } from './flight-return/flight-return.component';
+import { FlightSelectSummaryComponent } from './flight-select-summary/flight-select-summary.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DownloadTicketComponent } from './download-ticket/download-ticket.component';
 
 @NgModule({
@@ -48,6 +52,7 @@ import { DownloadTicketComponent } from './download-ticket/download-ticket.compo
     TimeFormatPipe,
     SelectPassengerComponent,
     FlightReturnComponent,
+    FlightSelectSummaryComponent,
     DownloadTicketComponent
   ],
   imports: [
@@ -55,7 +60,10 @@ import { DownloadTicketComponent } from './download-ticket/download-ticket.compo
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule,
+    MatAutocompleteModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]
