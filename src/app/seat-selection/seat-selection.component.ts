@@ -83,8 +83,7 @@ export class SeatSelectionComponent implements OnInit {
 
   toggleSeatSelection(rowIndex: number, colIndex: number) {
     const seat = this.seatSelection[rowIndex][colIndex];
-    const minSeats = parseInt(localStorage.getItem('noOfSeats') || '0', 10); // Minimum seats
-    const maxSeats = 10; // Maximum seats
+    const maxSeats = parseInt(localStorage.getItem('noOfSeats') || '0', 10); // Get max seats from localStorage
   
     if (seat.cost !== undefined) {
       if (seat.selected) {
@@ -94,21 +93,12 @@ export class SeatSelectionComponent implements OnInit {
         if (this.selectedSeats.length < maxSeats) {
           seat.selected = true;
           this.selectedSeats.push(seat);
-  
-          // Check if the current selection meets the minimum requirement
-          if (this.selectedSeats.length > maxSeats) {
-            alert(`You can only select up to ${maxSeats} seats.`);
-            seat.selected = false;
-            this.selectedSeats = this.selectedSeats.filter(s => s.seatId !== seat.seatId);
-          } 
         } else {
           alert(`You can only select up to ${maxSeats} seats.`);
         }
       }
     }
-  
   }
-  
   
 
   isSeatAvailable(rowIndex: number, colIndex: number): boolean {
@@ -127,22 +117,42 @@ export class SeatSelectionComponent implements OnInit {
     });
   }
 
+  // showTooltip(rowIndex: number, colIndex: number) {
+  //   const seat = this.seatSelection[rowIndex][colIndex];
+  //   if (seat.cost) {
+  //     this.isTooltipVisible = true;
+  //     this.tooltipStyle = {
+  //       position: 'absolute',
+  //       bottom: '100%', // Position it above the seat
+  //       left: '50%',
+  //       transform: 'translateX(-50%)',
+  //       backgroundColor: '#333',
+  //       color: '#fff',
+  //       padding: '5px',
+  //       borderRadius: '4px',
+  //       whiteSpace: 'nowrap',
+  //       fontSize: '12px',
+  //     };
+  //   }
+  // }
+
+  // hideTooltip() {
+  //   this.isTooltipVisible = false;
+  // }
 
   getSelectedSeats(): Seat[] {
     return this.selectedSeats;
   }
 
   submitSelection() {
-    const minSeats = parseInt(localStorage.getItem('noOfSeats') || '0', 10);
-    
-    if (this.selectedSeats.length < minSeats) {
-      alert(`You must select at least ${minSeats} seats.`);
+    const selectedSeats = this.getSelectedSeats();
+    const minSeats = parseInt(localStorage.getItem('noOfSeats')|| '0');
+    if (selectedSeats.length<minSeats){
+      alert("You must select atleast "+minSeats);
       return;
     }
-  
-    localStorage.setItem('selectedSeats', JSON.stringify(this.selectedSeats));
-    this.router.navigate(['/seat/addPassenger']);
-    console.log('Selected Seats:', this.selectedSeats);
+    localStorage.setItem('selectedSeats', JSON.stringify(selectedSeats));
+    this.router.navigate(['/seat/addPassenger'])
+    console.log('Selected Seats:', selectedSeats);
   }
-  
 }
