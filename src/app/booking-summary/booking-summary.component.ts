@@ -167,7 +167,7 @@ export class BookingSummaryComponent implements OnInit {
         .get<number>(
           `http://localhost:8080/flight/cost?seatId=${tr.seat.seatId}`
         )
-        .subscribe((cost) => (this.seatCharges += (cost - this.flightSummary[0].baseFare)));
+        .subscribe((cost) => (this.seatCharges += cost));
     });
   }
 }
