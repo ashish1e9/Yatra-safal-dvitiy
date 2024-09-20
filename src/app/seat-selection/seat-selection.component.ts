@@ -117,29 +117,6 @@ export class SeatSelectionComponent implements OnInit {
     });
   }
 
-  // showTooltip(rowIndex: number, colIndex: number) {
-  //   const seat = this.seatSelection[rowIndex][colIndex];
-  //   if (seat.cost) {
-  //     this.isTooltipVisible = true;
-  //     this.tooltipStyle = {
-  //       position: 'absolute',
-  //       bottom: '100%', // Position it above the seat
-  //       left: '50%',
-  //       transform: 'translateX(-50%)',
-  //       backgroundColor: '#333',
-  //       color: '#fff',
-  //       padding: '5px',
-  //       borderRadius: '4px',
-  //       whiteSpace: 'nowrap',
-  //       fontSize: '12px',
-  //     };
-  //   }
-  // }
-
-  // hideTooltip() {
-  //   this.isTooltipVisible = false;
-  // }
-
   getSelectedSeats(): Seat[] {
     return this.selectedSeats;
   }
