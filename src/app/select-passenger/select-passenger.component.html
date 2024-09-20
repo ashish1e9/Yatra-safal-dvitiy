@@ -50,10 +50,10 @@
   </div>
 
   <!-- Passenger Selection -->
-  <h2>Select Passengers</h2>
+  <h2 class="mt-4">Select Passengers</h2>
   <div class="row">
-    <div *ngFor="let passenger of passengers" class="col-md-4 mb-2">
-      <div class="card" [ngClass]="{'border-primary': selectedPassenger === passenger, 'border': true}" (click)="selectPassenger(passenger)" style="cursor: pointer;">
+    <div *ngFor="let passenger of passengers" class="col-md-4 mb-3">
+      <div class="card passenger-card" [ngClass]="{'border-primary': selectedPassenger === passenger}" (click)="selectPassenger(passenger)" style="cursor: pointer;">
         <div class="card-body">
           <h5 class="card-title">{{ passenger.firstName }} {{ passenger.lastName }}</h5>
           <p class="card-text">Passport No: {{ passenger.passportNo }}</p>
@@ -70,7 +70,7 @@
     <h3>Assign Seats</h3>
     <div class="row">
       <div *ngFor="let seat of selectedSeats" class="col-md-2 mb-2">
-        <button class="btn btn-outline-primary w-100"
+        <button class="btn btn-outline-primary w-100 seat-button"
                 [ngClass]="{'btn-secondary': seatAssignments[seat.seatId] === selectedPassenger}"
                 (click)="assignSeatToPassenger(seat)"
                 [disabled]="seatAssignments[seat.seatId]">
@@ -80,8 +80,8 @@
     </div>
   </div>
   
-  <div class="mt-3">
-    <button class="btn btn-success" [disabled]="!allSeatsAssigned()" (click)="saveAssignments()">Save Assignments</button>
-    <button class="btn btn-danger m-3" (click)="resetSelections()">Reset Selections</button>
+  <div class="mt-3 text-center">
+    <button class="btn btn-success me-2" [disabled]="!allSeatsAssigned()" (click)="saveAssignments()">Save Assignments</button>
+    <button class="btn btn-danger" (click)="resetSelections()">Reset Selections</button>
   </div>
 </div>

@@ -12,7 +12,7 @@ import { Traveller } from 'src/model/traveller';
 export class PaymentComponent implements OnInit {
   amount!: number;
   method!: string;
-  userId: number = 1;
+  userId!: number;
   timeRemaining: string = '00:00';
   timer: any;
   expirationTime!: number;
@@ -61,9 +61,10 @@ export class PaymentComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.userId = parseInt(localStorage.getItem("userId")!);
     const creationTime = sessionStorage.getItem('creationTime');
     
-    if (creationTime && sessionStorage.getItem("total")) {
+    if (this.userId && creationTime && sessionStorage.getItem("total")) {
       this.amount = parseInt(sessionStorage.getItem("total")!);
       const creationTimestamp = new Date(creationTime).getTime(); 
       this.startTime = Date.now();
@@ -168,8 +169,8 @@ export class PaymentComponent implements OnInit {
       console.log(response);
       if (response?.status) {
         sessionStorage.removeItem("creationTime")
-        sessionStorage.removeItem("total")
-        alert('Payment Successful');
+        sessionStorage.setItem("method", paymentData.method)
+        this.router.navigate(["/booking/confirmation"])
       } else {
         alert('Payment Failed');
       }

@@ -19,6 +19,8 @@ import { PaymentComponent } from './payment/payment.component';
 import {SelectPassengerComponent} from './select-passenger/select-passenger.component'
 import { FlightReturnComponent } from './flight-return/flight-return.component';
 import { FlightSelectSummaryComponent } from './flight-select-summary/flight-select-summary.component';
+import { PaymentConfirmationComponent } from './payment-confirmation/payment-confirmation.component';
+import { ViewTicketsComponent } from './view-tickets/view-tickets.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -43,7 +45,9 @@ const routes: Routes = [
   { path: "mytrips", component: MyTripsComponent },
   {path: "booking/summary", component: BookingSummaryComponent},
   {path: "booking/payment", component: PaymentComponent},
-  {path: 'seat/addPassenger', component: SelectPassengerComponent}
+  {path: 'seat/addPassenger', component: SelectPassengerComponent},
+  {path: 'booking/confirmation', component: PaymentConfirmationComponent},
+  {path: 'booking/tickets', component: ViewTicketsComponent},
 ];
 
 @NgModule({

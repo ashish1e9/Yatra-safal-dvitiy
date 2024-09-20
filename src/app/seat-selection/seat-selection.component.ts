@@ -83,10 +83,9 @@ export class SeatSelectionComponent implements OnInit {
 
   toggleSeatSelection(rowIndex: number, colIndex: number) {
     const seat = this.seatSelection[rowIndex][colIndex];
-    const minSeats = parseInt(localStorage.getItem('noOfSeats') || '0', 10); // Minimum seats
-    const maxSeats = 10; // Maximum seats
+    const maxSeats = parseInt(localStorage.getItem('noOfSeats') || '0', 10); // Get max seats from localStorage
   
-    if (seat.cost !== undefined) {
+    if (seat.cost !== "") {
       if (seat.selected) {
         seat.selected = false;
         this.selectedSeats = this.selectedSeats.filter(s => s.seatId !== seat.seatId);
@@ -94,29 +93,21 @@ export class SeatSelectionComponent implements OnInit {
         if (this.selectedSeats.length < maxSeats) {
           seat.selected = true;
           this.selectedSeats.push(seat);
-  
-          // Check if the current selection meets the minimum requirement
-          if (this.selectedSeats.length > maxSeats) {
-            alert(`You can only select up to ${maxSeats} seats.`);
-            seat.selected = false;
-            this.selectedSeats = this.selectedSeats.filter(s => s.seatId !== seat.seatId);
-          } 
         } else {
           alert(`You can only select up to ${maxSeats} seats.`);
         }
       }
     }
-  
   }
-  
   
 
   isSeatAvailable(rowIndex: number, colIndex: number): boolean {
-    return this.seatSelection[rowIndex][colIndex].cost !== undefined && !this.seatSelection[rowIndex][colIndex].selected;
+    console.log(this.seatSelection[rowIndex][colIndex])
+    return this.seatSelection[rowIndex][colIndex].cost !== "" && !this.seatSelection[rowIndex][colIndex].selected;
   }
 
   isSeatBooked(rowIndex: number, colIndex: number): boolean {
-    return this.seatSelection[rowIndex][colIndex].cost === undefined || this.seatSelection[rowIndex][colIndex].cost === '';
+    return this.seatSelection[rowIndex][colIndex].cost === "" || this.seatSelection[rowIndex][colIndex].cost === '';
   }
   
   initializeTooltips() {
@@ -127,22 +118,19 @@ export class SeatSelectionComponent implements OnInit {
     });
   }
 
-
   getSelectedSeats(): Seat[] {
     return this.selectedSeats;
   }
 
   submitSelection() {
-    const minSeats = parseInt(localStorage.getItem('noOfSeats') || '0', 10);
-    
-    if (this.selectedSeats.length < minSeats) {
-      alert(`You must select at least ${minSeats} seats.`);
+    const selectedSeats = this.getSelectedSeats();
+    const minSeats = parseInt(localStorage.getItem('noOfSeats')|| '0');
+    if (selectedSeats.length<minSeats){
+      alert("You must select atleast "+minSeats);
       return;
     }
-  
-    localStorage.setItem('selectedSeats', JSON.stringify(this.selectedSeats));
-    this.router.navigate(['/seat/addPassenger']);
-    console.log('Selected Seats:', this.selectedSeats);
+    localStorage.setItem('selectedSeats', JSON.stringify(selectedSeats));
+    this.router.navigate(['/seat/addPassenger'])
+    console.log('Selected Seats:', selectedSeats);
   }
-  
 }

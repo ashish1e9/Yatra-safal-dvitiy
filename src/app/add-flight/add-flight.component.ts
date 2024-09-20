@@ -14,6 +14,7 @@ export class AddFlightComponent implements OnInit {
   adminEmail!: string;
   successMessage: string = '';
   errorMessage: string = '';
+  airlineId!: number;
 
   constructor(private fb: FormBuilder, private http: HttpClient) { }
 
@@ -28,7 +29,7 @@ export class AddFlightComponent implements OnInit {
       businessBaseFare: ['', [Validators.required, Validators.min(0)]],
       sourceCity: ['', Validators.required],
       destinationCity: ['', Validators.required],
-      airlineId: ['', Validators.required],
+      airlineId: [''],
       numberOfEconomyRows: ['', [Validators.required, Validators.min(1)]],
       numberOfBusinessRows: ['', [Validators.required, Validators.min(1)]],
       aisleCharge: ['', Validators.required],
@@ -42,8 +43,9 @@ export class AddFlightComponent implements OnInit {
     this.http.get<any>(url).subscribe(
       (response) => {
         console.log(response)
-        this.airlineName = response; 
-        console.log(this.airlineName);
+        this.airlineName = response.airlineName; 
+        this.airlineId = response.id;
+        console.log(this.airlineId, this.airlineName);
       }
     );
   }  
@@ -55,7 +57,7 @@ export class AddFlightComponent implements OnInit {
       const totalSeats = 6 * (formValues.numberOfBusinessRows + formValues.numberOfEconomyRows);
 
       const flightData = {
-        airlineId: formValues.airlineId,
+        airlineId: this.airlineId,
         aisleCharge: formValues.aisleCharge,
         arrivalTime: formValues.arrivalTime,
         businessBaseFare: formValues.businessBaseFare,
