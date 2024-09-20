@@ -85,7 +85,7 @@ export class SeatSelectionComponent implements OnInit {
     const seat = this.seatSelection[rowIndex][colIndex];
     const maxSeats = parseInt(localStorage.getItem('noOfSeats') || '0', 10); // Get max seats from localStorage
   
-    if (seat.cost !== undefined) {
+    if (seat.cost !== "") {
       if (seat.selected) {
         seat.selected = false;
         this.selectedSeats = this.selectedSeats.filter(s => s.seatId !== seat.seatId);
@@ -102,11 +102,12 @@ export class SeatSelectionComponent implements OnInit {
   
 
   isSeatAvailable(rowIndex: number, colIndex: number): boolean {
-    return this.seatSelection[rowIndex][colIndex].cost !== undefined && !this.seatSelection[rowIndex][colIndex].selected;
+    console.log(this.seatSelection[rowIndex][colIndex])
+    return this.seatSelection[rowIndex][colIndex].cost !== "" && !this.seatSelection[rowIndex][colIndex].selected;
   }
 
   isSeatBooked(rowIndex: number, colIndex: number): boolean {
-    return this.seatSelection[rowIndex][colIndex].cost === undefined || this.seatSelection[rowIndex][colIndex].cost === '';
+    return this.seatSelection[rowIndex][colIndex].cost === "" || this.seatSelection[rowIndex][colIndex].cost === '';
   }
   
   initializeTooltips() {
