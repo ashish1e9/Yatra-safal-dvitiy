@@ -24,7 +24,7 @@ export class MyTripsComponent implements OnInit {
 
   cancelledTicket?: CancelledTicket;
 
-  user: number = 1;
+  user: number = parseInt(localStorage.getItem('userId')||'0');
   url: string = `http://localhost:8080/mytrips?userId=${this.user}`;
 
   @ViewChild('pdfTable', { static: false }) pdfTable!: ElementRef;

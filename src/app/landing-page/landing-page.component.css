@@ -1,0 +1,38 @@
+.landing-page {
+    background: url('../../assets/landing-bg.jpg') no-repeat center center;
+    background-size: cover;
+    color: white;
+    padding: 100px 0;
+  }
+  
+  .hero-section {
+    padding: 50px 0;
+  }
+  
+  .cta-buttons {
+    margin-top: 20px;
+  }
+  
+  .features-section {
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 50px 0;
+    color: #333;
+  }
+  
+  .feature {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .feature h3 {
+    margin-top: 20px;
+  }
+  
+  .feature p {
+    color: #666;
+  }
+  
+  .fa-plane, .fa-wallet, .fa-user-friends {
+    color: #007bff; /* Bootstrap primary color */
+  }
+  

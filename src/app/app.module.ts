@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
-
+import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -67,7 +67,8 @@ import { ViewTicketsComponent } from './view-tickets/view-tickets.component';
     FormsModule,
     BrowserAnimationsModule,
     MatAutocompleteModule,
-    MatInputModule
+    MatInputModule,
+    CommonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
