@@ -1,0 +1,82 @@
+/* General container styling */
+.container {
+  max-width: 1200px;
+}
+
+/* Seat grid layout */
+.seat-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Row styling to center and add spacing */
+.row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px; /* Space between rows */
+}
+
+/* Seat container to align seats properly */
+.seat-container {
+  display: flex;
+  position: relative;
+}
+
+/* Spacing between columns in the first and second groups */
+.first-group {
+  margin-right: 10px; /* Space between columns within the first group */
+}
+
+.second-group {
+  margin-left: 10px; /* Space between columns within the second group */
+}
+
+/* Space between the first and second groups */
+.group-spacing {
+  margin-right: 50px; /* Space between first and second group */
+}
+
+/* Seat styling */
+.seat {
+  position: relative;
+  width: 50px; /* Adjust size as needed */
+  height: 50px; /* Adjust size as needed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+
+
+
+/* Seat status colors */
+.seat-available {
+  background-color: #6c757d; /* Bootstrap gray */
+  color: #fff;
+}
+
+.seat-selected {
+  background-color: #28a745; /* Bootstrap success green */
+  color: #fff;
+}
+
+.seat-booked {
+  background-color: #dc3545; /* Bootstrap danger red */
+  color: #fff;
+}
+
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .seat {
+    width: 40px;
+    height: 40px;
+    font-size: 12px;
+  }
+}

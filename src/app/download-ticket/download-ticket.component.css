@@ -1,0 +1,69 @@
+.boarding-pass {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+.source-destination {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.to {
+    font-weight: normal;
+}
+
+.departure,
+.arrival {
+    margin-top: 10px;
+}
+
+.passenger-info {
+    margin-top: 15px;
+}
+
+.barcode-qr {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.barcode,
+.qr-code {
+    width: 110px; /* Adjust width as necessary */
+    height: auto;
+}
+
+.card-subtitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+}
+
+.card-passenger {
+    display: flex;
+    flex: 3;
+    align-items: center;
+}
+
+.info {
+    flex: 1;
+}

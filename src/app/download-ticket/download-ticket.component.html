@@ -1,0 +1,40 @@
+<div class="card-header">
+    <h5 class="card-title">Flight No: {{ card.flightNo }}</h5>
+    <p class="card-text">Flight Date: {{ card.scheduleDay | date: 'medium' }}</p>
+</div>
+
+<div class="card-body">
+    <div class="card-subtitle">
+        <span class="source-destination">{{ card.sourceCity }}</span>
+        <span class="to"> to </span>
+        <span class="source-destination">{{ card.destinationCity }}</span>
+    </div>
+    <div class="card-subtitle">
+        <p class="card-text departure">Departure: {{ card.departureTime | timeFormat }}</p>
+        <p class="card-text arrival">Arrival: {{ card.arrivalTime | timeFormat }}</p>
+    </div>
+
+    <div class="passenger-info">
+        <div class="card-passenger">
+            <div class="info">
+                <strong>Passenger:</strong> {{ history.passengerName }} <br>
+            </div>
+            <div class="info">
+                <strong>Seat No:</strong> {{ history.seatNo }} <br>
+            </div>
+        </div>
+        <div  class="card-passenger">
+            <div class="info">
+                <strong>Passport No:</strong> {{ history.passportNo }} <br>
+            </div>
+            <div class="info">
+                <strong>Email:</strong> {{ history.email }} <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="barcode-qr">
+    <img src="../../assets/BarCode.png" alt="Barcode" class="barcode" />
+    <img src="../../assets/QR-Code.png" alt="QR Code" class="qr-code" />
+</div>

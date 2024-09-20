@@ -15,7 +15,7 @@
             <small *ngIf="loginForm.controls['password'].errors?.['required']">Password is required</small>
         </div>
 
-        <button type="submit" [disabled]="loginForm.invalid">Login</button>
+        <button type="submit" [disabled]="loginForm.invalid" >Login</button>
     </form>
 
     <div *ngIf="successMessage" class="alert alert-success">

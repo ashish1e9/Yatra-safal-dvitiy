@@ -13,12 +13,20 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 import { EditScheduleComponent } from './edit-schedule/edit-schedule.component';
 import { AddFlightComponent } from './add-flight/add-flight.component';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
+import { MyTripsComponent } from './my-trips/my-trips.component';
+import { BookingSummaryComponent } from './booking-summary/booking-summary.component';
+import { PaymentComponent } from './payment/payment.component';
+import {SelectPassengerComponent} from './select-passenger/select-passenger.component'
+import { FlightReturnComponent } from './flight-return/flight-return.component';
+import { FlightSelectSummaryComponent } from './flight-select-summary/flight-select-summary.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'flight/search', component: FlightSearchComponent },
+  { path: 'flight/return', component: FlightReturnComponent },
+  { path: 'flight/view', component: FlightSelectSummaryComponent },
   { path: 'flight/card', component: FlightCardComponent },
   { path: 'navbar', component: NavbarComponent },
   { path: 'header', component: HeaderComponent },
@@ -28,6 +36,14 @@ const routes: Routes = [
   {path: "admin/login", component: AdminLoginComponent},
   {path: "admin/flight/add", component: AddFlightComponent},
   {path: "admin/schedule/edit", component: EditScheduleComponent},
+  { path: "admin/dashboard", component: AdminDashboardComponent },
+  { path: "admin", component: AdminLoginComponent },
+  { path: "flight/add", component: AddFlightComponent },
+  { path: "schedule/edit", component: EditScheduleComponent },
+  { path: "mytrips", component: MyTripsComponent },
+  {path: "booking/summary", component: BookingSummaryComponent},
+  {path: "booking/payment", component: PaymentComponent},
+  {path: 'seat/addPassenger', component: SelectPassengerComponent}
 ];
 
 @NgModule({

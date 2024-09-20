@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import * as bootstrap from 'bootstrap';
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 
 interface Schedule {
   id: number;
@@ -14,6 +16,8 @@ interface Schedule {
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent implements OnInit {
+  
+  adminEmail: string | null = '';
   flightData: any[] = [];
   selectedFlight: any = null;
   selectedSchedule: Schedule[] = []; 
@@ -26,13 +30,15 @@ export class AdminDashboardComponent implements OnInit {
   editFlightForm: FormGroup;
   editScheduleForm: FormGroup;
   private apiUrl = 'http://localhost:8080/admin'; 
-  private adminId = 2; 
-
+  private adminId = 1; 
+  fId! :number;
   filteredSchedules: Schedule[] = [];
-  scheduleFilterForm: FormGroup;
+  FilterForm: FormGroup;
 
   cancelScheduleForm: FormGroup;
   cancelResponse: { success: boolean, message: string, noOfSchedules?: number } | null = null;
+
+  confirmDelete: string = '';
 
   constructor(private http: HttpClient, private fb: FormBuilder) {
     this.editFlightForm = this.fb.group({
@@ -49,9 +55,14 @@ export class AdminDashboardComponent implements OnInit {
       departureTime: ['', Validators.required]
     });
 
-    this.scheduleFilterForm = this.fb.group({
-      fromDate: [''],
-      toDate: ['']
+    this.FilterForm = this.fb.group({
+      fromDate: [''],                          
+      toDate: [''],                           
+      flightNo: [''],                         
+      economyBaseFare: [null],                 
+      businessBaseFare: [null],                
+      arrivalTime: [''],                       
+      departureTime: [''],    
     });
 
     this.cancelScheduleForm = this.fb.group({
@@ -66,6 +77,7 @@ export class AdminDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadFlights(this.adminId);
+    this.adminEmail = sessionStorage.getItem('adminEmail');
   }
 
   loadFlights(adminId: number): void {
@@ -104,9 +116,9 @@ export class AdminDashboardComponent implements OnInit {
     );
   }
 /////////////////////////////////////////////////////////////////////////////////////
-  filterSchedules(): void {
-    const fromDateStr = this.scheduleFilterForm.value.fromDate;
-    const toDateStr = this.scheduleFilterForm.value.toDate;
+  applyFilters(): void {
+    const fromDateStr = this.FilterForm.value.fromDate;
+    const toDateStr = this.FilterForm.value.toDate;
 
     const fromDate = new Date(fromDateStr);
     const toDate = new Date(toDateStr);
@@ -188,30 +200,78 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
+  confirmDeleteAction(): void {
+    this.confirmDelete = 'true';
+  }
+
+  getCancelFlightId(fId: number): void {
+    this.fId = fId;
+  }
 
   cancelSchedule(): void {
-    if (this.cancelScheduleForm.valid && this.selectedFlight) {
-      const fId = this.selectedFlight.id;
-      console.log(this.selectedFlight);
-      console.log(fId);
+    if (this.cancelScheduleForm.valid) {
+      console.log("flightId : ", this.fId);
       const fromDate = this.cancelScheduleForm.value.fromDate;
       const toDate = this.cancelScheduleForm.value.toDate;
-      this.http.get<any>(`http://localhost:8080/admin/cancel/schedule?fId=${fId}&fromDate=${fromDate}&toDate=${toDate}`).subscribe(
-        (response) => {
-          this.cancelResponse = {
-            success: true,
-            message: 'Schedules cancelled successfully.',
-            noOfSchedules: response.noOfSchedules
-          };
-        },
-        (error) => {
-          this.cancelResponse = {
-            success: false,
-            message: 'Failed to cancel schedules. Please try again later.'
-          };
-        }
-      );
+      if(confirm("Are you sure you want to cancel the schedule")) {
+        this.http.get<any>(`http://localhost:8080/admin/cancel/schedule?fId=${this.fId}&fromDate=${fromDate}&toDate=${toDate}`).subscribe(
+          (response) => {
+            this.cancelResponse = {
+              success: true,
+              message: 'Schedules cancelled successfully.',
+              noOfSchedules: response.noOfSchedules
+            };
+            console.log(this.cancelResponse.message);
+          }
+        );
+      }
     }
   }
+
+  // openConfirmDeleteModal(): void {
+  //   this.confirmDelete = 'true';
+  //   // Hide the cancel schedule modal and show the confirm delete modal
+  //   const cancelModalElement = document.getElementById('cancelScheduleModal');
+  //   if (cancelModalElement) {
+  //     const cancelModal = new bootstrap.Modal(cancelModalElement);
+  //     cancelModal.hide();
+  //   }
+  
+  //   const confirmModalElement = document.getElementById('confirmDeleteModal');
+  //   if (confirmModalElement) {
+  //     const confirmModal = new bootstrap.Modal(confirmModalElement);
+  //     confirmModal.show();
+  //   }
+  // }
+  
+  // cancelSchedule(): void {
+  //   if (this.cancelScheduleForm.valid && this.selectedFlight) {
+  //     const fId = this.selectedFlight.id;
+  //     const fromDate = this.cancelScheduleForm.value.fromDate;
+  //     const toDate = this.cancelScheduleForm.value.toDate;
+  //     this.http.get<any>(`http://localhost:8080/admin/cancel/schedule?fId=${fId}&fromDate=${fromDate}&toDate=${toDate}`).subscribe(
+  //       (response) => {
+  //         this.cancelResponse = {
+  //           success: true,
+  //           message: 'Schedules cancelled successfully.',
+  //           noOfSchedules: response.noOfSchedules
+  //         };
+  //         // Hide confirm modal after action
+  //         const confirmModalElement = document.getElementById('confirmDeleteModal');
+  //         if (confirmModalElement) {
+  //           const confirmModal = bootstrap.Modal.getInstance(confirmModalElement);
+  //           confirmModal?.hide();
+  //         }
+  //       },
+  //       (error) => {
+  //         this.cancelResponse = {
+  //           success: false,
+  //           message: 'Failed to cancel schedules. Please try again later.'
+  //         };
+  //       }
+  //     );
+  //   }
+  // }
+  
   
 }

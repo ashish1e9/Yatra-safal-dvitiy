@@ -10,8 +10,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class AddFlightComponent implements OnInit {
 
   flightForm!: FormGroup;
-  //private apiUrl = 'http://localhost:8080/admin/addFlight?adminId=2';
-
+  airlineName: string = '';
+  adminEmail!: string;
   successMessage: string = '';
   errorMessage: string = '';
 
@@ -35,35 +35,25 @@ export class AddFlightComponent implements OnInit {
       windowCharge: ['', Validators.required],
       middleCharge: ['', Validators.required],
     });
-  }
 
-  // ngOnInit(): void {
-  //   this.flightForm = this.fb.group({
-  //     flightNo: [''],
-  //     fromDate: [''],
-  //     toDate: [''],
-  //     departureTime: [''],
-  //     arrivalTime: [''],
-  //     economyBaseFare: [''],
-  //     businessBaseFare: [''],
-  //     sourceCity: [''],
-  //     destinationCity: [''],
-  //     airlineId: [''],
-  //     numberOfEconomyRows: [''],
-  //     numberOfBusinessRows: [''],
-  //     aisleCharge: [''],
-  //     windowCharge: [''],
-  //     middleCharge: [''],
-  //   });
-  // }
-  
+    const storedAdminEmail = sessionStorage.getItem('adminEmail');
+    this.adminEmail = storedAdminEmail !== null ? storedAdminEmail : '';
+    const url = `http://localhost:8080/airline?email=${this.adminEmail}`; 
+    this.http.get<any>(url).subscribe(
+      (response) => {
+        console.log(response)
+        this.airlineName = response; 
+        console.log(this.airlineName);
+      }
+    );
+  }  
 
   onSubmit() {
     if (this.flightForm.valid) {
       const formValues = this.flightForm.value;
-  
+
       const totalSeats = 6 * (formValues.numberOfBusinessRows + formValues.numberOfEconomyRows);
-  
+
       const flightData = {
         airlineId: formValues.airlineId,
         aisleCharge: formValues.aisleCharge,
@@ -82,7 +72,7 @@ export class AddFlightComponent implements OnInit {
         total_seats: totalSeats, 
         windowCharge: formValues.windowCharge
       };
-  
+
       console.log(flightData); 
       const url = `http://localhost:8080/admin/addFlight?airlineId=${flightData.airlineId}&aisleCharge=${flightData.aisleCharge}&arrivalTime=${flightData.arrivalTime}&businessBaseFare=${flightData.businessBaseFare}&departureTime=${flightData.departureTime}&destinationCity=${flightData.destinationCity}&economyBaseFare=${flightData.economyBaseFare}&flightNo=${flightData.flightNo}&fromDate=${flightData.fromDate}&middleCharge=${flightData.middleCharge}&numberOfBusinessRows=${flightData.numberOfBusinessRows}&numberOfEconomyRows=${flightData.numberOfEconomyRows}&sourceCity=${flightData.sourceCity}&toDate=${flightData.toDate}&total_seats=${flightData.total_seats}&windowCharge=${flightData.windowCharge}`;
   
@@ -91,12 +81,14 @@ export class AddFlightComponent implements OnInit {
           console.log(response);
           this.successMessage = 'Flight successfully added!';
           this.flightForm.reset(); 
+        },
+        (error) => {
+          this.errorMessage = 'Error adding flight!';
+          console.error(error);
         }
       );
     } else {
       this.flightForm.markAllAsTouched();  
     }
   }
-  
 }
-

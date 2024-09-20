@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-login',
@@ -13,8 +14,9 @@ export class AdminLoginComponent implements OnInit {
   errorMessage: string = '';
 
   private loginApiUrl = 'http://localhost:8080/admin/login'; 
+  
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {}
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
     this.initializeForm();
@@ -26,20 +28,25 @@ export class AdminLoginComponent implements OnInit {
       password: ['', [Validators.required]],
     });
   }
+
   onSubmitLogin(): void {
     if (this.loginForm.valid) {
       const loginData = this.loginForm.value;
-      //console.log(loginData);
-      const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+      console.log(loginData);
+      console.log(this.loginForm);
 
-      this.http.post<any>(this.loginApiUrl, loginData, { headers }).subscribe(
+      this.http.post<any>(this.loginApiUrl, loginData).subscribe(
         (response) => {
-          this.successMessage = 'Login successful!';
-          this.errorMessage = '';
-        },
-        (error) => {
-          this.errorMessage = 'Login failed. Please check your credentials.';
-          this.successMessage = '';
+          if (response){
+            console.log(response);
+            sessionStorage.setItem('adminEmail', loginData.email);
+            this.router.navigate(['/admin/dashboard']);
+          }
+          else{
+            this.errorMessage = 'Login failed. Please check your credentials.';
+            this.successMessage = '';
+            console.log(this.errorMessage);
+          }
         }
       );
     }

@@ -1,33 +1,38 @@
-<navbar></navbar>
-<h3>Seat Selection</h3>
-<form (ngSubmit)="submitSelection()">
-  <div *ngFor="let row of seatSelection; let rowIndex = index" class="row">
-    <div [ngClass]="{'business-class': isBusinessClass(rowIndex), 'economy-class': !isBusinessClass(rowIndex)}">
-      <span>{{ isBusinessClass(rowIndex) ? 'Business Class' : 'Economy Class' }} Row {{ rowIndex + 1 }}</span>
-      <div class="seats">
-        <label *ngFor="let seat of row; let colIndex = index">
-          <input type="checkbox" name="seat-{{rowIndex}}-{{colIndex}}" (change)="toggleSeatSelection(rowIndex, colIndex)" />
-          {{ getSeatLabel(rowIndex, colIndex) }}
-        </label>
+<div class="container mt-4">
+  <h1 class="text-center mb-4">Flight Seat Selection</h1>
+
+  <div class="seat-grid">
+    <div class="row" *ngFor="let row of seatSelection; let rowIndex = index">
+      <div class="seat-container">
+        <div *ngFor="let seat of row; let colIndex = index" 
+             class="col seat-container"
+             [ngClass]="{
+               'first-group': colIndex < 3,
+               'second-group': colIndex >= 3,
+               'group-spacing': colIndex === 2
+             }">
+          <div class="seat"
+               [ngClass]="{
+                 'seat-available': isSeatAvailable(rowIndex, colIndex),
+                 'seat-selected': seat.selected,
+                 'seat-booked': isSeatBooked(rowIndex, colIndex)
+               }"
+               (click)="toggleSeatSelection(rowIndex, colIndex)"
+               data-bs-toggle="tooltip"
+               data-bs-placement="top"
+               [attr.title]="'Cost: ' + seat.cost">
+            {{ getSeatLabel(rowIndex, colIndex) }}
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <button type="submit">Submit</button>
-</form>
 
-<!-- Optional styles to separate business and economy visually -->
-<style>
-  .business-class {
-    background-color: #f0f0f0;
-  }
-  .economy-class {
-    background-color: #ffffff;
-  }
-  .row {
-    margin-bottom: 15px;
-  }
-  .seats {
-    display: flex;
-    gap: 10px;
-  }
-</style>
+  <div class="text-center mt-4">
+    <button class="btn btn-primary" 
+            (click)="submitSelection()" >
+      Submit Selection
+    </button>
+  </div>
+  
+</div>

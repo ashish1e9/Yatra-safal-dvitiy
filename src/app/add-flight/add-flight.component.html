@@ -18,11 +18,8 @@
         </div>
       </div>
       <div class="col-md-6 mb-2">
-        <label for="airline_id" class="form-label">Airline ID:</label>
-        <input id="airline_id" formControlName="airlineId" type="number" class="form-control" />
-        <div *ngIf="flightForm.get('airlineId')?.invalid && flightForm.get('airlineId')?.touched" class="text-danger small">
-          Airline ID is required
-        </div>
+        <label for="airline_name" class="form-label">Airline Name:</label>
+        <input id="airline_name" type="text" class="form-control" [value]="airlineName" readonly />
       </div>
     </div>
 
