@@ -68,6 +68,7 @@ export class FlightSearchComponent implements OnInit {
     localStorage.setItem('flightClass', flightClass.toUpperCase());
     localStorage.setItem('noOfSeats', JSON.stringify(this.noOfPassengers));
     this.flightService.setOneWayFlight(flight);
+  
 
     this.router.navigate(['/flight/view']);
   }

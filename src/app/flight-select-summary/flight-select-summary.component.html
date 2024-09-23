@@ -17,10 +17,13 @@
             <strong>Source:</strong> {{ selectedOneWayFlight.sourceCity }}<br>
             <strong>Destination:</strong> {{ selectedOneWayFlight.destinationCity }}<br>
           </p>
-          <p class="card-text">
+          <ng-container *ngIf="!ifBusiness">
             <strong>Economy Fare:</strong> ₹{{ selectedOneWayFlight.economyBaseFare }}<br>
+          </ng-container>
+          
+          <ng-container *ngIf="ifBusiness">
             <strong>Business Fare:</strong> ₹{{ selectedOneWayFlight.businessBaseFare }}<br>
-          </p>
+          </ng-container>
         </div>
         <div class="col-md-4 text-center">
           <p class="text-success"><strong>Departure Time:</strong> {{ selectedOneWayFlight.departureTime }}</p>
@@ -47,9 +50,15 @@
             <strong>Destination:</strong> {{ selectedReturnFlight.destinationCity }}<br>
           </p>
           <p class="card-text">
-            <strong>Economy Fare:</strong> ₹{{ selectedReturnFlight.economyBaseFare }}<br>
-            <strong>Business Fare:</strong> ₹{{ selectedReturnFlight.businessBaseFare }}<br>
+            <ng-container *ngIf="!ifBusiness">
+              <strong>Economy Fare:</strong> ₹{{ selectedReturnFlight.economyBaseFare }}<br>
+            </ng-container>
+            
+            <ng-container *ngIf="ifBusiness">
+              <strong>Business Fare:</strong> ₹{{ selectedReturnFlight.businessBaseFare }}<br>
+            </ng-container>
           </p>
+          
         </div>
         <div class="col-md-4 text-center">
           <p class="text-success"><strong>Departure Time:</strong> {{ selectedReturnFlight.departureTime }}</p>
