@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as bootstrap from 'bootstrap';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+import { Router } from '@angular/router';
 
 interface Schedule {
   id: number;
@@ -18,6 +19,7 @@ interface Schedule {
 export class AdminDashboardComponent implements OnInit {
   
   adminEmail: string | null = '';
+  adminId: string | null = '';
   flightData: any[] = [];
   selectedFlight: any = null;
   selectedSchedule: Schedule[] = []; 
@@ -30,7 +32,7 @@ export class AdminDashboardComponent implements OnInit {
   editFlightForm: FormGroup;
   editScheduleForm: FormGroup;
   private apiUrl = 'http://localhost:8080/admin'; 
-  private adminId = 1; 
+  
   fId! :number;
   filteredSchedules: Schedule[] = [];
   FilterForm: FormGroup;
@@ -39,8 +41,12 @@ export class AdminDashboardComponent implements OnInit {
   cancelResponse: { success: boolean, message: string, noOfSchedules?: number } | null = null;
 
   confirmDelete: string = '';
+  flightFetchData = false;
+  dataLoaded: boolean = false;
+  searchFlightMessage: string = '';
 
-  constructor(private http: HttpClient, private fb: FormBuilder) {
+  constructor(private http: HttpClient, private fb: FormBuilder, private router: Router) {
+    
     this.editFlightForm = this.fb.group({
       arrivalTime: ['', Validators.required],
       departureTime: ['', Validators.required],
@@ -73,22 +79,40 @@ export class AdminDashboardComponent implements OnInit {
     this.searchForm = this.fb.group({
       searchTerm: ['']
     });
+
   }
 
   ngOnInit(): void {
-    this.loadFlights(this.adminId);
-    this.adminEmail = sessionStorage.getItem('adminEmail');
+    this.adminEmail = sessionStorage.getItem('adminEmail') || '';
+    this.adminId = sessionStorage.getItem('adminId') || '';
+    if (this.adminId) {
+      this.loadFlights(this.adminId);
+    } else {
+      console.error('AdminId is missing from sessionStorage.');
+      this.router.navigate(['/admin/login']);
+    }
   }
 
-  loadFlights(adminId: number): void {
+  
+  loadFlights(adminId: string): void {
+    this.dataLoaded = false;
     this.http.get<any[]>(`${this.apiUrl}/flights/${adminId}`).subscribe(
       (response) => {
         this.flightData = response;
         this.filteredFlights = response;
         this.flights = response;
         console.log(this.flightData);
+        console.log(this.flightData.length);
+        this.dataLoaded = true;
+        if(this.flightData.length == 0) {
+          this.flightFetchData = true;
+        }
       }
     );
+    
+      console.log(this.flightFetchData);
+      console.log(this.flightData.length);
+    
   }
   
   searchFlights(): void {
@@ -99,22 +123,13 @@ export class AdminDashboardComponent implements OnInit {
       this.filteredFlights = this.flights.filter(flight => 
         flight.flightNo.toLowerCase().includes(this.searchForm.value.searchTerm.toLowerCase())
       );
+      if(this.filteredFlights.length == 0) {
+        this.searchFlightMessage = "No flights found with the given search term.";
+      }
     }
   }
 
-  editFlight(flightId: number): void {
-    this.http.get<any>(`${this.apiUrl}/flight/${flightId}`).subscribe(
-      (response) => {
-        this.selectedFlight = response;
-        this.editFlightForm.patchValue({
-          arrivalTime: response.arrivalTime,
-          departureTime: response.departureTime,
-          economyBaseFare: response.economyBaseFare,
-          businessBaseFare: response.businessBaseFare
-        });
-      }
-    );
-  }
+ 
 /////////////////////////////////////////////////////////////////////////////////////
   applyFilters(): void {
     const fromDateStr = this.FilterForm.value.fromDate;
@@ -139,6 +154,19 @@ export class AdminDashboardComponent implements OnInit {
   }
 ////////////////////////////////////////////////////////////////////////////////////////
 
+editFlight(flightId: number): void {
+  this.http.get<any>(`${this.apiUrl}/flight/${flightId}`).subscribe(
+    (response) => {
+      this.selectedFlight = response;
+      this.editFlightForm.patchValue({
+        arrivalTime: response.arrivalTime,
+        departureTime: response.departureTime,
+        economyBaseFare: response.economyBaseFare,
+        businessBaseFare: response.businessBaseFare
+      });
+    }
+  );
+}
   updateFlightDetails(): void {
     if (this.editFlightForm.valid && this.selectedFlight) {
       const updatedFlightDetails = this.editFlightForm.value; 
@@ -146,6 +174,9 @@ export class AdminDashboardComponent implements OnInit {
       this.http.post<any>(`${this.apiUrl}/edit/flight`, updatedFlightDetails).subscribe(
         (response) => {
           console.log(response);
+          if(response){
+            alert("Flight details updated successfully");
+          }
         }
       );
     }
@@ -165,6 +196,12 @@ export class AdminDashboardComponent implements OnInit {
   editSchedulesBetweenDates(flightId: number): void {
     this.http.get<Schedule[]>(`${this.apiUrl}/schedules/${flightId}`).subscribe(
       (response) => {
+        console.log("here is me");
+        console.log(response);
+        this.editScheduleForm.patchValue({
+          fromDate: response[0].departureTime,
+
+        });
         this.selectedFlight = { flightId };
         this.selectedSchedule = response;
         console.log(this.selectedSchedule);
@@ -175,6 +212,7 @@ export class AdminDashboardComponent implements OnInit {
   editSchedule(flightId: number): void {
     this.http.get<Schedule[]>(`${this.apiUrl}/schedules/${flightId}`).subscribe(
       (response) => {
+        
         this.selectedFlight = { flightId };
         this.selectedSchedule = response;
         console.log(this.selectedSchedule);
@@ -227,51 +265,10 @@ export class AdminDashboardComponent implements OnInit {
       }
     }
   }
-
-  // openConfirmDeleteModal(): void {
-  //   this.confirmDelete = 'true';
-  //   // Hide the cancel schedule modal and show the confirm delete modal
-  //   const cancelModalElement = document.getElementById('cancelScheduleModal');
-  //   if (cancelModalElement) {
-  //     const cancelModal = new bootstrap.Modal(cancelModalElement);
-  //     cancelModal.hide();
-  //   }
   
-  //   const confirmModalElement = document.getElementById('confirmDeleteModal');
-  //   if (confirmModalElement) {
-  //     const confirmModal = new bootstrap.Modal(confirmModalElement);
-  //     confirmModal.show();
-  //   }
-  // }
-  
-  // cancelSchedule(): void {
-  //   if (this.cancelScheduleForm.valid && this.selectedFlight) {
-  //     const fId = this.selectedFlight.id;
-  //     const fromDate = this.cancelScheduleForm.value.fromDate;
-  //     const toDate = this.cancelScheduleForm.value.toDate;
-  //     this.http.get<any>(`http://localhost:8080/admin/cancel/schedule?fId=${fId}&fromDate=${fromDate}&toDate=${toDate}`).subscribe(
-  //       (response) => {
-  //         this.cancelResponse = {
-  //           success: true,
-  //           message: 'Schedules cancelled successfully.',
-  //           noOfSchedules: response.noOfSchedules
-  //         };
-  //         // Hide confirm modal after action
-  //         const confirmModalElement = document.getElementById('confirmDeleteModal');
-  //         if (confirmModalElement) {
-  //           const confirmModal = bootstrap.Modal.getInstance(confirmModalElement);
-  //           confirmModal?.hide();
-  //         }
-  //       },
-  //       (error) => {
-  //         this.cancelResponse = {
-  //           success: false,
-  //           message: 'Failed to cancel schedules. Please try again later.'
-  //         };
-  //       }
-  //     );
-  //   }
-  // }
-  
+  logout(): void {
+    sessionStorage.clear();
+    console.log(sessionStorage);
+  }
   
 }

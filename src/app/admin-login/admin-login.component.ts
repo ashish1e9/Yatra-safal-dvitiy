@@ -39,6 +39,7 @@ export class AdminLoginComponent implements OnInit {
         (response) => {
           if (response){
             console.log(response);
+            sessionStorage.setItem('adminId', response);
             sessionStorage.setItem('adminEmail', loginData.email);
             this.router.navigate(['/admin/dashboard']);
           }
@@ -47,7 +48,7 @@ export class AdminLoginComponent implements OnInit {
             this.successMessage = '';
             console.log(this.errorMessage);
           }
-        }
+        }      
       );
     }
   }
