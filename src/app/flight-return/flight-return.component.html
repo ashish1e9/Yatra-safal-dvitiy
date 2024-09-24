@@ -298,21 +298,44 @@
         </div>
     </div>
 </div>
-<div class="container mt-4">
+<div class="container mt-4"></div>
+  <div class="row">
+    <!-- One Way Flight Source to Destination -->
+    <div class="col-md-6 text-center">
+      <h4 class="text-primary font-weight-bold">{{ source }} ---> {{ destination }}</h4>
+    </div>
+
+    <!-- Return Flight Destination to Source -->
+    <div class="col-md-6 text-center">
+      <h4 class="text-primary font-weight-bold">{{ destination }} ---> {{ source }}</h4>
+    </div>
+  </div>
+
+
+
+  <div class="container mt-4"  #flightsSection>
     <div class="row">
       <!-- One Way Flights -->
       <div class="col-md-6">
-        <h4 class="text-center text-primary font-weight-bold mb-3">{{source}}---->{{destination}}</h4>
         <div class="row">
+          <!-- No Flights Available for One Way Flights -->
+          <div class="col-md-12" *ngIf="filteredFlights.length === 0&&viewFlights &&  viewFlights.length > 0">
+            <div class="text-center p-3" style="border: 2px dashed #ddd; border-radius: 10px; background-color: #f8f9fa; min-height: 250px;">
+              <h2 class="text-danger">No One Way Flights Available</h2>
+              <p>Sorry, there are no available one-way flights matching your search criteria.</p>
+              <img src="assets/Flight.gif" alt="Flights not available" style="max-width: 150px;" />
+            </div>
+          </div>
+  
+          <!-- Display One Way Flights -->
           <div class="col-md-12 mb-3" *ngFor="let flight of filteredFlights">
-            <div class="card" [ngClass]="{'selected-card': selectedOneWayFlight === flight}">
+            <div class="card">
               <div class="card-body">
                 <div class="row">
                   <!-- Airline Name in Center -->
                   <div class="col-md-12 text-center">
                     <h5 class="text-primary font-weight-bold">{{ flight.airline.airlineName }}</h5>
                   </div>
-  
                   <div class="col-md-8">
                     <h6 class="card-title">Flight No: {{ flight.flightNo }}</h6>
                     <p class="card-text">
@@ -324,14 +347,10 @@
                       <strong>Business Fare:</strong> {{ flight.businessBaseFare }}<br>
                     </p>
                   </div>
-  
                   <div class="col-md-4 text-center">
                     <p><strong>Departure Time:</strong> {{ flight.departureTime }}</p>
                     <p><strong>Arrival Time:</strong> {{ flight.arrivalTime }}</p>
-                    <!-- Select Button to choose flight -->
-                    <button class="btn btn-outline-primary" (click)="selectOneWayFlight(flight)">
-                      Select
-                    </button>
+                    <button class="btn btn-outline-primary" (click)="selectOneWayFlight(flight)">Select</button>
                   </div>
                 </div>
               </div>
@@ -342,17 +361,25 @@
   
       <!-- Return Flights -->
       <div class="col-md-6">
-        <h4 class="text-center text-primary font-weight-bold mb-3">{{destination}}---->{{source}}</h4>
         <div class="row">
+          <!-- No Flights Available for Return Flights -->
+          <div class="col-md-12" *ngIf="returnFilteredFlights.length === 0&&viewFlights &&  viewFlights.length > 0">
+            <div class="text-center p-3" style="border: 2px dashed #ddd; border-radius: 10px; background-color: #f8f9fa; min-height: 250px;">
+              <h2 class="text-danger">No Return Flights Available</h2>
+              <p>Sorry, there are no available return flights matching your search criteria.</p>
+              <img src="assets/Flight.gif" alt="Flights not available" style="max-width: 150px;" />
+            </div>
+          </div>
+  
+          <!-- Display Return Flights -->
           <div class="col-md-12 mb-3" *ngFor="let flight of returnFilteredFlights">
-            <div class="card" [ngClass]="{'selected-card': selectedReturnFlight === flight}">
+            <div class="card">
               <div class="card-body">
                 <div class="row">
                   <!-- Airline Name in Center -->
                   <div class="col-md-12 text-center">
                     <h5 class="text-primary font-weight-bold">{{ flight.airline.airlineName }}</h5>
                   </div>
-  
                   <div class="col-md-8">
                     <h6 class="card-title">Flight No: {{ flight.flightNo }}</h6>
                     <p class="card-text">
@@ -364,14 +391,10 @@
                       <strong>Business Fare:</strong> {{ flight.businessBaseFare }}<br>
                     </p>
                   </div>
-  
                   <div class="col-md-4 text-center">
                     <p><strong>Departure Time:</strong> {{ flight.departureTime }}</p>
                     <p><strong>Arrival Time:</strong> {{ flight.arrivalTime }}</p>
-                    <!-- Select Button to choose flight -->
-                    <button class="btn btn-outline-primary" (click)="selectReturnFlight(flight)">
-                      Select
-                    </button>
+                    <button class="btn btn-outline-primary" (click)="selectReturnFlight(flight)">Select</button>
                   </div>
                 </div>
               </div>
