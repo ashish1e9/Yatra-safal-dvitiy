@@ -81,12 +81,10 @@ export class AddFlightComponent implements OnInit {
       this.http.get<any>(url).subscribe(
         (response) => {
           console.log(response);
-          this.successMessage = 'Flight successfully added!';
+          if(response?.status){
+            this.successMessage = 'Flight successfully added!';
+          }
           this.flightForm.reset(); 
-        },
-        (error) => {
-          this.errorMessage = 'Error adding flight!';
-          console.error(error);
         }
       );
     } else {
