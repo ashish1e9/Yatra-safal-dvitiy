@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Airline, Flight, FlightView } from 'src/model/flight-summary';
@@ -11,6 +11,7 @@ import { FlightService } from 'src/service/FlightService';
   styleUrls: ['./flight-return.component.css']
 })
 export class FlightReturnComponent implements OnInit {
+  @ViewChild('flightsSection') flightsSection!: ElementRef;
 
   searchForm!: FormGroup;
   filterFormDay!: FormGroup;
@@ -43,6 +44,7 @@ export class FlightReturnComponent implements OnInit {
   alertFadeOut!: boolean;
   minDate: string = '';
   today: string = '';
+  showEmptyFlights = false;
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private flightService: FlightService) {
     // Initializing forms with correct form controls
     this.searchForm = this.fb.group({
@@ -247,6 +249,7 @@ export class FlightReturnComponent implements OnInit {
 
 
   search() {
+    this.showEmptyFlights=true;
     let source = this.searchForm.value.source;
     let destination = this.searchForm.value.destination;
     this.source = source;
@@ -309,8 +312,14 @@ export class FlightReturnComponent implements OnInit {
       this.fetchAirlines();
 
     });
+    this.scrollToFlights();
   }
 
+  scrollToFlights() {
+    if (this.flightsSection) {
+      this.flightsSection.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
   populateAvailableFlights() {
     this.viewFlights = this.flights.flatMap(flight =>
       flight.flightSchedules.map(schedule => ({

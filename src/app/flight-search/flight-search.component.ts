@@ -1,6 +1,6 @@
 import { Time } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Flight, FlightSummary, FlightView, Airline } from 'src/model/flight-summary';
@@ -13,7 +13,9 @@ import { map, startWith } from 'rxjs/operators';
   styleUrls: ['./flight-search.component.css']
 })
 export class FlightSearchComponent implements OnInit {
+  @ViewChild('flightsSection') flightsSection!: ElementRef;
 
+  showEmptyFlights = false;
   searchForm!: FormGroup;
   filterFormDay!: FormGroup;
   filterFormPrice!: FormGroup;
@@ -196,7 +198,7 @@ export class FlightSearchComponent implements OnInit {
       // Handle form invalidity
       return;
     }
-
+    this.showEmptyFlights=true;
     let source = this.searchForm.value.source;
     let destination = this.searchForm.value.destination;
     if (source === destination) {
@@ -237,13 +239,16 @@ export class FlightSearchComponent implements OnInit {
       console.log(this.flights);
       this.populateAvailableFlights();
       this.fetchAirlines();
+      this.scrollToFlights();
 
     });
   }
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.cities.filter(city => city.toLowerCase().includes(filterValue));
+  scrollToFlights() {
+    if (this.flightsSection) {
+      this.flightsSection.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
+
   populateAvailableFlights() {
     this.viewFlights = this.flights.flatMap(flight =>
       flight.flightSchedules.map(schedule => ({
