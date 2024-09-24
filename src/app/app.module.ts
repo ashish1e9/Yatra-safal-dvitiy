@@ -32,6 +32,7 @@ import { DownloadTicketComponent } from './download-ticket/download-ticket.compo
 import { PaymentConfirmationComponent } from './payment-confirmation/payment-confirmation.component';
 import { ViewTicketsComponent } from './view-tickets/view-tickets.component';
 import { CancelConfirmationComponent } from './cancel-confirmation/cancel-confirmation.component';
+import { SeatPassengerSelectComponent } from './seat-passenger-select/seat-passenger-select.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { CancelConfirmationComponent } from './cancel-confirmation/cancel-confir
     DownloadTicketComponent,
     PaymentConfirmationComponent,
     ViewTicketsComponent,
-    CancelConfirmationComponent
+    CancelConfirmationComponent,
+    SeatPassengerSelectComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,85 @@
+/* General container styling */
+.container {
+    max-width: 1200px;
+  }
+  
+  /* Seat grid layout */
+  .seat-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Row styling to center and add spacing */
+  .row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px; /* Space between rows */
+  }
+  
+  /* Seat container to align seats properly */
+  .seat-container {
+    display: flex;
+    position: relative;
+  }
+  
+  /* Spacing between columns in the first and second groups */
+  .first-group {
+    margin-right: 10px; /* Space between columns within the first group */
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+  }
+  
+  .second-group {
+    margin-left: 10px; /* Space between columns within the second group */
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+  }
+  
+  /* Space between the first and second groups */
+  .group-spacing {
+    margin-right: 50px; /* Space between first and second group */
+  }
+  
+  /* Seat styling */
+  .seat {
+    position: relative;
+    width: 50px; /* Adjust size as needed */
+    height: 50px; /* Adjust size as needed */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    background-image: url("https://img.icons8.com/ios/50/car-seat.png"); /* Use your seat image */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  
+  /* Seat status colors */
+  .seat-available {
+    color: #000000;
+  }
+  
+  .seat-selected {
+    background-image: url("../../assets/seat-filled.png");
+  }
+  
+  .seat-booked {
+    background-image: url("../../assets/seat-filled-booked.png");
+  }
+  
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .seat {
+      width: 40px;
+      height: 40px;
+      font-size: 12px;
+    }
+  }
+  

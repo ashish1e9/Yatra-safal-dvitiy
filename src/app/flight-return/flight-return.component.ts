@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Airline, Flight, FlightView } from 'src/model/flight-summary';
@@ -11,7 +11,8 @@ import { FlightService } from 'src/service/FlightService';
   styleUrls: ['./flight-return.component.css']
 })
 export class FlightReturnComponent implements OnInit {
-
+  @ViewChild('flightsSection') flightsSection!: ElementRef;
+  defaultDate: string = '';
   searchForm!: FormGroup;
   filterFormDay!: FormGroup;
   filterFormPrice!: FormGroup;
@@ -43,15 +44,9 @@ export class FlightReturnComponent implements OnInit {
   alertFadeOut!: boolean;
   minDate: string = '';
   today: string = '';
+  showEmptyFlights = false;
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private flightService: FlightService) {
-    // Initializing forms with correct form controls
-    this.searchForm = this.fb.group({
-      source: this.flightService.getSource(),
-      destination: this.flightService.getDestination(),
-      date: this.flightService.getDate(),
-      noOfPassengers: this.flightService.getPassenger(),
-      returndate: this.flightService.getReturnDate(),
-    });
+
     this.filterFormDay = this.fb.group({
       morning: [false],
       night: [false]
@@ -87,18 +82,30 @@ export class FlightReturnComponent implements OnInit {
   ngOnInit(): void {
     const today = new Date();
     this.today = this.formatDate(today);
+    this.minDate = this.formatDate(today);
+    const tomorrow = new Date(today); // Create a new date based on today
+    tomorrow.setDate(today.getDate() + 1); // Add one day to today's date
+    this.defaultDate = this.formatDate(tomorrow);
 
-    this.searchForm.get('date')?.valueChanges.subscribe(date => {
-      this.minDate = date ? this.formatDate(new Date(date)) : this.today;
-      this.searchForm.get('returndate')?.updateValueAndValidity();
-    });
-    
+        // Initializing forms with correct form controls
+        this.searchForm = this.fb.group({
+          source: this.flightService.getSource(),
+          destination: this.flightService.getDestination(),
+          date: this.flightService.getDate()||this.defaultDate,
+          noOfPassengers: this.flightService.getPassenger()||1,
+          returndate: this.flightService.getReturnDate(),
+        });
     let url = `http://localhost:8080/flight/getCities`
     this.http.get<string[]>(url).subscribe(data => {
       this.cities = data;
       console.log(this.cities);
     });
 
+    this.searchForm.get('date')?.valueChanges.subscribe(date => {
+      this.minDate = date ? this.formatDate(new Date(date)) : this.today;
+      this.searchForm.get('returndate')?.updateValueAndValidity();
+    });
+    
     // Move valueChanges subscription inside ngOnInit
     this.filterFormDay.valueChanges.subscribe(() => {
       this.filter();
@@ -247,6 +254,7 @@ export class FlightReturnComponent implements OnInit {
 
 
   search() {
+    this.showEmptyFlights=true;
     let source = this.searchForm.value.source;
     let destination = this.searchForm.value.destination;
     this.source = source;
@@ -309,8 +317,14 @@ export class FlightReturnComponent implements OnInit {
       this.fetchAirlines();
 
     });
+    this.scrollToFlights();
   }
 
+  scrollToFlights() {
+    if (this.flightsSection) {
+      this.flightsSection.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
   populateAvailableFlights() {
     this.viewFlights = this.flights.flatMap(flight =>
       flight.flightSchedules.map(schedule => ({
