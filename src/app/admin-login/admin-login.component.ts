@@ -24,8 +24,8 @@ export class AdminLoginComponent implements OnInit {
 
   initializeForm(): void {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
+      email: ['bob.white@example.com', [Validators.required, Validators.email]],
+      password: ['adminpass456', [Validators.required]],
     });
   }
 

@@ -61,28 +61,26 @@ export class PaymentComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userId = parseInt(localStorage.getItem("userId")!);
+    this.userId = parseInt(localStorage.getItem('userId')!);
     const creationTime = sessionStorage.getItem('creationTime');
-    
-    if (this.userId && creationTime && sessionStorage.getItem("total")) {
-      this.amount = parseInt(sessionStorage.getItem("total")!);
-      const creationTimestamp = new Date(creationTime).getTime(); 
+
+    if (this.userId && creationTime && sessionStorage.getItem('total')) {
+      this.amount = parseInt(sessionStorage.getItem('total')!);
+      const creationTimestamp = new Date(creationTime).getTime();
       this.startTime = Date.now();
       this.sessionDuration = 300000;
       this.expirationTime = creationTimestamp + this.sessionDuration;
-      console.log("exptime", this.expirationTime);
+      console.log('exptime', this.expirationTime);
       this.updateTimer();
       this.paymentForm = this.fb.group({
         amount: [this.amount, Validators.required],
         method: ['', Validators.required],
       });
 
-
-      this.checkSessionValidity(); 
-    }
-    else{
-      console.log("Here1")
-      this.router.navigate(["/"]);
+      this.checkSessionValidity();
+    } else {
+      console.log('Here1');
+      this.router.navigate(['/']);
     }
   }
 
@@ -112,15 +110,15 @@ export class PaymentComponent implements OnInit {
 
   updateTimer() {
     this.timer = setInterval(() => {
-      const remaining = this.expirationTime - Date.now(); 
-      console.log("Remaining", remaining)
+      const remaining = this.expirationTime - Date.now();
+      console.log('Remaining', remaining);
 
       if (remaining <= 0) {
         clearInterval(this.timer);
         this.isExpired = true;
         this.timeRemaining = '00:00';
-        console.log("Here2")
-        this.router.navigate(["/"]);
+        console.log('Here2');
+        this.router.navigate(['/']);
       } else {
         const minutes = Math.floor(remaining / 60000);
         const seconds = Math.floor((remaining % 60000) / 1000);
@@ -145,35 +143,38 @@ export class PaymentComponent implements OnInit {
       console.log('INVALID');
       this.router.navigate(['/']);
     }
-
-    this.travellers.map((tr) => {
-      passengers.push({
-        passengerId: tr.passengerId,
-        seatId: tr.seat.seatId,
+    if (this.paymentForm.value.method === '') {
+      alert('Please select a payment method');
+    } else {
+      this.travellers.map((tr) => {
+        passengers.push({
+          passengerId: tr.passengerId,
+          seatId: tr.seat.seatId,
+        });
       });
-    });
 
-    const paymentData = {
-      amount: this.paymentForm.value.amount,
-      method: this.paymentForm.value.method,
-      bookingId: sessionStorage.getItem('bookingId'),
-      passengers: passengers,
-    };
+      const paymentData = {
+        amount: this.paymentForm.value.amount,
+        method: this.paymentForm.value.method,
+        bookingId: sessionStorage.getItem('bookingId'),
+        passengers: passengers,
+      };
 
-    console.log(this.paymentForm.value);
+      console.log(this.paymentForm.value);
 
-    console.log('payment', paymentData);
+      console.log('payment', paymentData);
 
-    let url = 'http://localhost:8080/payment';
-    this.http.post(url, paymentData).subscribe((response: any) => {
-      console.log(response);
-      if (response?.status) {
-        sessionStorage.removeItem("creationTime")
-        sessionStorage.setItem("method", paymentData.method)
-        this.router.navigate(["/booking/confirmation"])
-      } else {
-        alert('Payment Failed');
-      }
-    });
+      let url = 'http://localhost:8080/payment';
+      this.http.post(url, paymentData).subscribe((response: any) => {
+        console.log(response);
+        if (response?.status) {
+          sessionStorage.removeItem('creationTime');
+          sessionStorage.setItem('method', paymentData.method);
+          this.router.navigate(['/booking/confirmation']);
+        } else {
+          alert('Payment Failed');
+        }
+      });
+    }
   }
 }

@@ -21,6 +21,7 @@ import { FlightReturnComponent } from './flight-return/flight-return.component';
 import { FlightSelectSummaryComponent } from './flight-select-summary/flight-select-summary.component';
 import { PaymentConfirmationComponent } from './payment-confirmation/payment-confirmation.component';
 import { ViewTicketsComponent } from './view-tickets/view-tickets.component';
+import { CancelConfirmationComponent } from './cancel-confirmation/cancel-confirmation.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -34,7 +35,6 @@ const routes: Routes = [
   { path: 'header', component: HeaderComponent },
   { path: 'footer', component: FooterComponent },
   { path: 'seat', component: SeatSelectionComponent },
-  {path: "dashboard", component: AdminDashboardComponent},
   {path: "admin/login", component: AdminLoginComponent},
   {path: "admin/flight/add", component: AddFlightComponent},
   {path: "admin/schedule/edit", component: EditScheduleComponent},
@@ -48,6 +48,8 @@ const routes: Routes = [
   {path: 'seat/addPassenger', component: SelectPassengerComponent},
   {path: 'booking/confirmation', component: PaymentConfirmationComponent},
   {path: 'booking/tickets', component: ViewTicketsComponent},
+  {path: "cancellation/summary", component: CancelConfirmationComponent },
+
 ];
 
 @NgModule({

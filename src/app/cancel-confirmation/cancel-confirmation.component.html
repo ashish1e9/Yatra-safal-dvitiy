@@ -1,5 +1,11 @@
-<h3 class="text-center bg-primary p-3 text-white">Booking Summary</h3>
-<div class="container-fluid d-flex">
+<h3 class="text-center bg-primary p-3 text-white">Cancellation Summary</h3>
+<div *ngIf="!isLoaded" class="text-center my-5">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-3">Fetching data, please wait...</p>
+</div>
+<div class="container-fluid d-flex"  *ngIf="isLoaded">
   <!-- Left Half: Flight Summary and Traveller Summary -->
   <div class="d-flex flex-column flex-fill border-end p-3">
     <div class="mb-3">
@@ -23,13 +29,6 @@
     <div>
       <div class="w-100 d-flex justify-content-between align-items-center">
         <h4 class="m-0">Travellers Summary</h4>
-        <button
-          type="button"
-          class="btn btn-outline-primary m-1"
-          routerLink="/seat/addPassenger"
-        >
-          Edit
-        </button>
       </div>
       <table class="table table-striped mb-0 mt-3 w-100 text-center">
         <thead>
@@ -42,19 +41,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let traveller of travellers; index as i">
-            <td>{{ i + 1 }}</td>
+          <tr>
+            <td>{{ 1 }}</td>
             <td>{{ traveller.firstName }} {{ traveller.lastName }}</td>
             <td>{{ traveller.email }}</td>
             <td>{{ traveller.gender }}</td>
-            <td>{{ traveller.seat.seatNo }}</td>
+            <td>{{ traveller.seatNo }}</td>
           </tr>
         </tbody>
       </table>
     </div>
-    
     <div class="d-flex align-items-center justify-content-center mt-5">
-      <button class="btn btn-primary w-100" (click)="goToPay()">Pay Now</button>
+      <button class="btn btn-danger w-100" (click)="cancel()">Cancel Ticket</button>
     </div>
   </div>
 
@@ -69,15 +67,12 @@
         <h5>GST: {{tax}} </h5>
         <hr>
         <h4>Total: {{total}} </h4>
-        </div> -->
+      </div> -->
         <div class="card-body">
           <div class="d-flex flex-column">
             <div class="d-flex justify-content-between mb-2">
-              <span class="font-weight-bold">Base Charges:</span>
-              <span
-                >₹ {{ flightSummary[0].baseFare }} X {{ travellers.length }}: ₹
-                {{ flightSummary[0].baseFare * travellers.length }}</span
-              >
+              <span class="font-weight-bold">Base Fare:</span>
+              <span>₹ {{ flightSummary[0].baseFare }}</span>
             </div>
             <div class="d-flex justify-content-between mb-2">
               <span class="font-weight-bold">Seat Charges:</span>
@@ -92,17 +87,16 @@
               <span>Total:</span>
               <span>₹ {{ total }}</span>
             </div>
+            <div class="d-flex justify-content-between font-weight-semibold fs-6 mt-3">
+                <span>Refund Percent %:</span>
+                <span>{{ refundPercent }}%</span>
+              </div>
+              <hr />
+            <div class="d-flex justify-content-between font-weight-bold fs-4">
+              <span>Refund Amount:</span>
+              <span>₹ {{ refund }}</span>
+            </div>
           </div>
-        </div>
-        <div class="alert alert-info mt-4">
-          <h5 class="fs-5">Cancellation Policy</h5>
-          <p>Please note:</p>
-    
-          <ul>
-            <li> 7 and more days before departure: 100% refund.</li>
-            <li>3 to 6 days before departure: 50% refund.</li>
-            <li>Less than 3 days before departure: 0% refund.</li>
-          </ul>
         </div>
       </div>
     </div>

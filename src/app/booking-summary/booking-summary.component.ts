@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { BookingData, SeatId } from 'src/model/booking-data';
 import { FlightClass } from 'src/model/flight-class-enum';
 import { FlightSummary } from 'src/model/flight-summary';
@@ -38,7 +39,7 @@ export class BookingSummaryComponent implements OnInit {
     return { hours, minutes };
   }
 
-  percentage(extra: number, base: number): number {
+  percentage(base: number, extra: number): number {
     return (18 * (base + extra)) / 100;
   }
 
@@ -113,14 +114,26 @@ export class BookingSummaryComponent implements OnInit {
     }
 
     let url = `http://localhost:8080/flight/summary?flightScheduleId=${this.flightScheduleId}&flightClass=${this.flightClass}`;
-    this.http.get<FlightSummary[]>(url).subscribe((response) => {
+    this.http.get<FlightSummary[]>(url).subscribe(async (response) => {
       console.log(response);
+
+      const seatChargePromises = this.travellers.map(async (tr) => {
+        const cost = await firstValueFrom(this.http.get<number>(
+          `http://localhost:8080/flight/cost?seatId=${tr.seat.seatId}`
+        ));
+        return cost;
+      });
+      const seatChargesArray = await Promise.all(seatChargePromises);
+      console.log(seatChargesArray);
+      this.seatCharges = seatChargesArray.reduce((total, charge) => total + charge, 0);
+
+      console.log("HERE");
       this.flightSummary = response;
       this.tax = this.percentage(
         this.flightSummary[0].baseFare * this.travellers.length,
         this.seatCharges
       );
-
+      
       this.total +=
         this.tax +
         this.seatCharges +
@@ -162,12 +175,6 @@ export class BookingSummaryComponent implements OnInit {
     //   },
     // ];
 
-    this.travellers.map((tr) => {
-      this.http
-        .get<number>(
-          `http://localhost:8080/flight/cost?seatId=${tr.seat.seatId}`
-        )
-        .subscribe((cost) => (this.seatCharges += cost));
-    });
+    
   }
 }
