@@ -1,7 +1,7 @@
 import { Time } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, FormArray, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Flight, FlightSummary, FlightView, Airline } from 'src/model/flight-summary';
 import { FlightService } from 'src/service/FlightService';
@@ -15,6 +15,7 @@ import { map, startWith } from 'rxjs/operators';
 export class FlightSearchComponent implements OnInit {
   @ViewChild('flightsSection') flightsSection!: ElementRef;
 
+  defaultDate: string = '';
   showEmptyFlights = false;
   searchForm!: FormGroup;
   filterFormDay!: FormGroup;
@@ -40,12 +41,7 @@ export class FlightSearchComponent implements OnInit {
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private flightService: FlightService) {
 
     // Initializing forms with correct form controls
-    this.searchForm = this.fb.group({
-      source: this.flightService.getSource(),
-      destination: this.flightService.getDestination(),
-      date: this.flightService.getDate(),
-      noOfPassengers: this.flightService.getPassenger()
-    });
+
     this.filterFormDay = this.fb.group({
       morning: [false],
       night: [false]
@@ -76,7 +72,11 @@ export class FlightSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     const today = new Date();
+    const tomorrow = new Date(today); // Create a new date based on today
+    tomorrow.setDate(today.getDate() + 1); // Add one day to today's date
+    this.defaultDate = this.formatDate(tomorrow);
     this.minDate = this.formatDate(today);
     let url = `http://localhost:8080/flight/getCities`
     this.http.get<string[]>(url).subscribe(data => {
@@ -84,6 +84,12 @@ export class FlightSearchComponent implements OnInit {
       console.log(this.cities);
     });
 
+    this.searchForm = this.fb.group({
+      source: this.flightService.getSource(),
+      destination: this.flightService.getDestination(),
+      date:this.flightService.getDate()||this.defaultDate,
+      noOfPassengers: this.flightService.getPassenger()||1
+    });
     // Move valueChanges subscription inside ngOnInit
     this.filterFormDay.valueChanges.subscribe(() => {
       this.filter();
@@ -223,7 +229,7 @@ export class FlightSearchComponent implements OnInit {
     this.showAlert = false;
     let date = this.searchForm.value.date;
     let noOfPassengers = this.searchForm.value.noOfPassengers;
-     this.noOfPassengers = this.searchForm.value.noOfPassengers;
+    this.noOfPassengers = this.searchForm.value.noOfPassengers;
     this.filteredFlights = this.flightService.getFilteredFlights();
     this.flightService.setSource(source);
     this.flightService.setDestination(destination);

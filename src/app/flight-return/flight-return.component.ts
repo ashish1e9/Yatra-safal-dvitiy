@@ -12,7 +12,7 @@ import { FlightService } from 'src/service/FlightService';
 })
 export class FlightReturnComponent implements OnInit {
   @ViewChild('flightsSection') flightsSection!: ElementRef;
-
+  defaultDate: string = '';
   searchForm!: FormGroup;
   filterFormDay!: FormGroup;
   filterFormPrice!: FormGroup;
@@ -46,14 +46,7 @@ export class FlightReturnComponent implements OnInit {
   today: string = '';
   showEmptyFlights = false;
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private flightService: FlightService) {
-    // Initializing forms with correct form controls
-    this.searchForm = this.fb.group({
-      source: this.flightService.getSource(),
-      destination: this.flightService.getDestination(),
-      date: this.flightService.getDate(),
-      noOfPassengers: this.flightService.getPassenger(),
-      returndate: this.flightService.getReturnDate(),
-    });
+
     this.filterFormDay = this.fb.group({
       morning: [false],
       night: [false]
@@ -89,18 +82,30 @@ export class FlightReturnComponent implements OnInit {
   ngOnInit(): void {
     const today = new Date();
     this.today = this.formatDate(today);
+    this.minDate = this.formatDate(today);
+    const tomorrow = new Date(today); // Create a new date based on today
+    tomorrow.setDate(today.getDate() + 1); // Add one day to today's date
+    this.defaultDate = this.formatDate(tomorrow);
 
-    this.searchForm.get('date')?.valueChanges.subscribe(date => {
-      this.minDate = date ? this.formatDate(new Date(date)) : this.today;
-      this.searchForm.get('returndate')?.updateValueAndValidity();
-    });
-    
+        // Initializing forms with correct form controls
+        this.searchForm = this.fb.group({
+          source: this.flightService.getSource(),
+          destination: this.flightService.getDestination(),
+          date: this.flightService.getDate()||this.defaultDate,
+          noOfPassengers: this.flightService.getPassenger()||1,
+          returndate: this.flightService.getReturnDate(),
+        });
     let url = `http://localhost:8080/flight/getCities`
     this.http.get<string[]>(url).subscribe(data => {
       this.cities = data;
       console.log(this.cities);
     });
 
+    this.searchForm.get('date')?.valueChanges.subscribe(date => {
+      this.minDate = date ? this.formatDate(new Date(date)) : this.today;
+      this.searchForm.get('returndate')?.updateValueAndValidity();
+    });
+    
     // Move valueChanges subscription inside ngOnInit
     this.filterFormDay.valueChanges.subscribe(() => {
       this.filter();
