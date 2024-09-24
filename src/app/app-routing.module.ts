@@ -21,6 +21,7 @@ import { FlightReturnComponent } from './flight-return/flight-return.component';
 import { FlightSelectSummaryComponent } from './flight-select-summary/flight-select-summary.component';
 import { PaymentConfirmationComponent } from './payment-confirmation/payment-confirmation.component';
 import { ViewTicketsComponent } from './view-tickets/view-tickets.component';
+import { SeatPassengerSelectComponent } from './seat-passenger-select/seat-passenger-select.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -33,7 +34,7 @@ const routes: Routes = [
   { path: 'navbar', component: NavbarComponent },
   { path: 'header', component: HeaderComponent },
   { path: 'footer', component: FooterComponent },
-  { path: 'seat', component: SeatSelectionComponent },
+  { path: 'seat', component: SeatPassengerSelectComponent },
   {path: "dashboard", component: AdminDashboardComponent},
   {path: "admin/login", component: AdminLoginComponent},
   {path: "admin/flight/add", component: AddFlightComponent},
