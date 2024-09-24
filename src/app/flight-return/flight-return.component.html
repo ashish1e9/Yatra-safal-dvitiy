@@ -109,7 +109,7 @@
     <button type="submit" class="btn btn-primary">Search</button>
   </form>
   
-<div class="container mt-4">
+<div class="container mt-4"  *ngIf=" viewFlights &&  viewFlights.length > 0">
     <div class="row">
         <!-- Left Column for Filters and Sort Options -->
         <div class="col-md-6">

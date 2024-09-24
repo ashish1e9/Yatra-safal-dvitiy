@@ -40,7 +40,7 @@ export class SelectPassengerComponent implements OnInit {
   }
 
   fetchPassengers() {
-    this.http.get<Passenger[]>('http://localhost:8080/user/getPassenger?userId=1').subscribe(response => {
+    this.http.get<Passenger[]>('http://localhost:8080/user/getPassenger?userId='+localStorage.getItem('userId')).subscribe(response => {
       this.passengers = response;
       console.log(this.passengers);
     });

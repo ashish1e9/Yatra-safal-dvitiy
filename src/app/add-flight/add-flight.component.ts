@@ -53,9 +53,7 @@ export class AddFlightComponent implements OnInit {
   onSubmit() {
     if (this.flightForm.valid) {
       const formValues = this.flightForm.value;
-
       const totalSeats = 6 * (formValues.numberOfBusinessRows + formValues.numberOfEconomyRows);
-
       const flightData = {
         airlineId: this.airlineId,
         aisleCharge: formValues.aisleCharge,
@@ -81,10 +79,14 @@ export class AddFlightComponent implements OnInit {
       this.http.get<any>(url).subscribe(
         (response) => {
           console.log(response);
-          if(response?.status){
-            this.successMessage = 'Flight successfully added!';
-          }
+          this.successMessage = 'Flight successfully added!';
+          alert('Flight added successfully!');
           this.flightForm.reset(); 
+        },
+        (error) => {
+          this.errorMessage = 'Error adding flight!';
+          alert('Error adding flight!');
+          console.error(error);
         }
       );
     } else {
