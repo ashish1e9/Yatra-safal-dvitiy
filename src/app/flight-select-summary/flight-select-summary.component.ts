@@ -11,6 +11,7 @@ import { FlightService } from 'src/service/FlightService';
 export class FlightSelectSummaryComponent implements OnInit {
   selectedOneWayFlight!:FlightView;
   selectedReturnFlight!:FlightView|null;
+  ifBusiness:boolean=false;
 
   constructor(private flightService: FlightService,private router: Router) { 
 
@@ -23,6 +24,10 @@ export class FlightSelectSummaryComponent implements OnInit {
     console.log(this.selectedOneWayFlight); 
     this.selectedReturnFlight = this.flightService.getReturnFlight();
     console.log(this.selectedReturnFlight); 
+    this.ifBusiness=localStorage.getItem('flightClass')==='BUSINESS'?true:false;
+
+
+    
   }
   handleBooking() {
     const userId = localStorage.getItem('userId');

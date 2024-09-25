@@ -1,16 +1,16 @@
 <navbar></navbar>
 <div class="container">
-    <div class="upcomingFlights">
+    <div class="upcomingFlights" id="upcomingFlights">
         <h2>Upcoming Flights</h2>
-        <div *ngFor="let card of upcomingBooking" class="card my-3">
-            <div class="card-header" id="heading-{{card.bookingId}}">
+        <div *ngFor="let card of upcomingBooking; index as i" class="card my-3">
+            <div class="card-header" id="heading-{{card.bookingId}}" >
                 <h5 class="d-flex justify-content-between align-items-center">
                     <button class="btn btn-link" 
                             data-bs-toggle="collapse" 
                             [attr.data-bs-target]="'#collapse-' + card.bookingId" 
                             aria-expanded="false" 
                             [attr.aria-controls]="'collapse-' + card.bookingId">
-                        Booking #{{ card.bookingId }} - {{ card.airlineName }}
+                        Booking #{{ i+1 }} - {{ card.airlineName }}
                     </button>
                     <span>Booking Date: {{ card.bookingDate | date: 'medium' }}</span>
                 </h5>
@@ -18,13 +18,13 @@
 
             <div id="collapse-{{card.bookingId}}" class="collapse" 
                  [attr.aria-labelledby]="'heading-' + card.bookingId" 
-                 data-parent=".upcomingFlights">
+                 data-parent="#upcomingFlights">
                 <div class="modal-body">
                     <div *ngFor="let history of card.bookingHistory" class="border p-3 mb-2 boarding-pass">
                         <download-ticket [card]="card" [history]="history"></download-ticket>
                         <div class="no-print">
                             <button class="btn btn-danger no-print" 
-                                    (click)="cancelBooking(history.ticketId, history.seatId)">
+                                    (click)="cancelBooking(history.ticketId, history.seatId, history.seatNo, card.flightScheduleId)">
                                 Cancel
                             </button>
                         </div>
@@ -39,17 +39,18 @@
         </div>
     </div>
 
-    <div class="previousFlights">
+    <div class="previousFlights" id="previousFlights">
         <h2>Previous Flights</h2>
-        <div *ngFor="let card of previousBooking" class="card my-3">
+        <div *ngFor="let card of previousBooking; index as i" class="card my-3">
             <div class="card-header" id="heading-prev-{{card.bookingId}}">
                 <h5 class="d-flex justify-content-between align-items-center">
                     <button class="btn btn-link" 
                             data-bs-toggle="collapse" 
                             [attr.data-bs-target]="'#collapse-prev-' + card.bookingId" 
                             aria-expanded="false" 
-                            [attr.aria-controls]="'collapse-prev-' + card.bookingId">
-                        Booking #{{ card.bookingId }} - {{ card.airlineName }}
+                            [attr.aria-controls]="'collapse-prev-' + card.bookingId"
+                           >
+                        Booking #{{ i+1 }} - {{ card.airlineName }}
                     </button>
                     <span>Booking Date: {{ card.bookingDate | date: 'medium' }}</span>
                 </h5>
@@ -57,7 +58,7 @@
 
             <div id="collapse-prev-{{card.bookingId}}" class="collapse" 
                  [attr.aria-labelledby]="'heading-prev-' + card.bookingId" 
-                 data-parent=".previousFlights">
+                 data-parent="#previousFlights">
                 <div class="card-body">
                     <h6 class="card-subtitle mb-2 text-muted">
                         {{ card.sourceCity }} to {{ card.destinationCity }}

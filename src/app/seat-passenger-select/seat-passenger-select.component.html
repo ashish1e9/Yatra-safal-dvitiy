@@ -1,0 +1,103 @@
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Flight Seat Selection & Passenger Assignment</h1>
+  <div class="row">
+    <div class="col-6">
+      <div class="seat-grid">
+      <div class="row" *ngFor="let row of seatSelection; let rowIndex = index">
+        <div class="seat-container">
+          <div *ngFor="let seat of row; let colIndex = index" 
+               class="col seat-container"
+               [ngClass]="{
+                 'first-group': colIndex < 3,
+                 'second-group': colIndex >= 3,
+                 'group-spacing': colIndex === 2
+               }">
+            <div class="seat"
+                 [ngClass]="{
+                   'seat-available': isSeatAvailable(rowIndex, colIndex),
+                   'seat-selected': seat.selected,
+                   'seat-booked': isSeatBooked(rowIndex, colIndex)
+                 }"
+                 (click)="!isSeatDisabled && toggleSeatSelection(rowIndex, colIndex)"
+                 data-bs-toggle="tooltip"
+                 data-bs-placement="top"
+                 [attr.title]="'Cost: ' + seat.cost">
+            </div>
+            <p class="seat-label">{{ getSeatLabel(rowIndex, colIndex) }}</p>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    <!-- <div class="mt-3 text-center">
+      <button class="btn btn-danger" (click)="resetSelections()">Reset Selections</button>
+    </div> -->
+  </div>
+  <div class="col-6">
+      <!-- Modal for Adding New Passenger -->
+    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addPassengerModal">
+      Add New Passenger
+    </button>
+  <div class="modal fade" id="addPassengerModal" tabindex="-1" aria-labelledby="addPassengerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addPassengerModalLabel">Add New Passenger</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="addNewPassenger()">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="firstName" class="form-label">First Name</label>
+                <input type="text" id="firstName" class="form-control" [(ngModel)]="newPassenger.firstName" name="firstName" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input type="text" id="lastName" class="form-control" [(ngModel)]="newPassenger.lastName" name="lastName" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" id="email" class="form-control" [(ngModel)]="newPassenger.email" name="email" required>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="gender" class="form-label">Gender</label>
+                <select id="gender" class="form-select" [(ngModel)]="newPassenger.gender" name="gender" required>
+                  <option value="" disabled selected>Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="passportNo" class="form-label">Passport No</label>
+                <input type="text" id="passportNo" class="form-control" [(ngModel)]="newPassenger.passportNo" name="passportNo" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Passenger</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+    <h2 class="mt-4">Select Passengers</h2>
+    <div class="row">
+      <div *ngFor="let passenger of passengers" class="col-12 mb-3">
+        <div class="card passenger-card" [ngClass]="{'border-primary': selectedPassenger === passenger}" (click)="!isPassengerDisabled &&  selectPassenger(passenger)" style="cursor: pointer;">
+          <div class="card-body">
+            <h5 class="card-title">{{ passenger.firstName }} {{ passenger.lastName }}</h5>
+            <p class="card-text">Passport No: {{ passenger.passportNo }}</p>
+            <p *ngIf="passengerSelections[passenger.passengerId]" class="text-success">
+              Assigned Seat: {{ passengerSelections[passenger.passengerId]?.seatNo }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  <div class="text-center mt-4">
+    <button class="btn btn-success me-2" [disabled]="!allSeatsAssigned()" (click)="saveAssignments()">Save Assignments</button>
+  </div>
+  </div> 
+  </div>
+  

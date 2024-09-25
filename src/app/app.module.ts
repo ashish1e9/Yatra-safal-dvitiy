@@ -31,6 +31,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DownloadTicketComponent } from './download-ticket/download-ticket.component';
 import { PaymentConfirmationComponent } from './payment-confirmation/payment-confirmation.component';
 import { ViewTicketsComponent } from './view-tickets/view-tickets.component';
+import { CancelConfirmationComponent } from './cancel-confirmation/cancel-confirmation.component';
+import { SeatPassengerSelectComponent } from './seat-passenger-select/seat-passenger-select.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +60,9 @@ import { ViewTicketsComponent } from './view-tickets/view-tickets.component';
     FlightSelectSummaryComponent,
     DownloadTicketComponent,
     PaymentConfirmationComponent,
-    ViewTicketsComponent
+    ViewTicketsComponent,
+    CancelConfirmationComponent,
+    SeatPassengerSelectComponent
   ],
   imports: [
     BrowserModule,

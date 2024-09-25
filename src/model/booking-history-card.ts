@@ -11,6 +11,7 @@ export class BookingHistoryCard {
   destinationCity!: string;
   arrivalTime!: string;
   departureTime!: string;
+  flightScheduleId!: number;
 
   bookingHistory!: BookingHistory[];
 }
