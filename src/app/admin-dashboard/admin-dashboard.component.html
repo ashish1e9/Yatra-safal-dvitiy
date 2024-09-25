@@ -1,13 +1,12 @@
 <div class="container mt-4">
   <!-- Admin Heading and Email -->
-  <div>
-    <h2 class="text-center">Admin Dashboard</h2>
-    <div class="text-center mt-3">
-      <p class="lead">Welcome, {{ adminEmail }}</p>
+  <div class="container mt-5">
+    <h2 class="text-left mb-4">Admin Dashboard</h2> <!-- Align heading to the left -->
+    <div class="d-flex justify-content-between align-items-center">
+      <p class="lead mb-0 text-primary">Welcome, {{ adminEmail }}</p> <!-- Change color to blue -->
+      <button class="btn btn-danger" routerLink="/admin/login" (click)="logout()">Logout</button>
     </div>
-    <div>
-      <button routerLink="/admin/login" (click)="logout()">Logout</button>
-    </div>
+    <div class="mb-4"> <!-- Add space between welcome line and search form -->
   </div>
 
   <!-- Search Section and Add Flight Button -->
@@ -30,11 +29,12 @@
       </div>
     </div>
   </div>
+</div>
 
   <!-- Main Content -->
   <div class="row">
     <!-- Left Section: Filter (20% Width) -->
-    <div class="col-md-2">
+    <!-- <div class="col-md-2">
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Filter Schedules</h5>
@@ -71,7 +71,93 @@
           </form>
         </div>
       </div>
+    </div> -->
+
+    <div class="col-md-2">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Sort Flights</h5>
+          <form [formGroup]="SortForm" (ngSubmit)="applySorting()">
+            <!-- <div class="mb-3">
+              <label for="sortByFlightName" class="form-label">Sort by Flight Name:</label>
+              <select id="sortByFlightName" formControlName="sortByFlightName" class="form-select">
+                <option value="">Select</option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+              </select>
+            </div> -->
+            <div class="mb-3">
+              <label for="sortByFlightNo" class="form-label">Sort by Flight No:</label>
+              <select id="sortByFlightNo" formControlName="sortByFlightNo" class="form-select">
+                <option value="">Select</option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="sortByDepartureDate" class="form-label">Sort by From Date:</label>
+              <select id="sortByDepartureDate" formControlName="sortByFromDate" class="form-select">
+                <option value="">Select</option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="sortByArrivalDate" class="form-label">Sort by To Date:</label>
+              <select id="sortByArrivalDate" formControlName="sortByArrivalDate" class="form-select">
+                <option value="">Select</option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="sortByArrivalTime" class="form-label">Sort by Arrival Time:</label>
+              <select id="sortByArrivalTime" formControlName="sortByArrivalTime" class="form-select">
+                <option value="">Select</option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="sortByDepartureTime" class="form-label">Sort by Departure Time:</label>
+              <select id="sortByDepartureTime" formControlName="sortByDepartureTime" class="form-select">
+                <option value="">Select</option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="sortByDepartureTime" class="form-label">Sort by Departure Time:</label>
+              <select id="sortByDepartureTime" formControlName="sortByDepartureTime" class="form-select">
+                <option value="">Select</option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="sortByBusinessBaseFare" class="form-label">Sort by Business Base Fare:</label>
+              <select id="sortByBusinessBaseFare" formControlName="sortByBusinessBaseFare" class="form-select">
+                <option value="">Select</option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+              </select>
+            </div>
+            
+            <div class="mb-3">
+              <label for="sortByEconomyBaseFare" class="form-label">Sort by Economy Base Fare:</label>
+              <select id="sortByEconomyBaseFare" formControlName="sortByEconomyBaseFare" class="form-select">
+                <option value="">Select</option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+              </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Apply Sorting</button>
+          </form>
+        </div>
+      </div>
     </div>
+    
 
     <!-- Right Section: Flight List (80% Width) -->
     <div class="col-md-10">
@@ -82,17 +168,17 @@
           <table class="table table-striped">
             <thead>
               <tr>
-                <th>Flight No</th>
-                <th>Total Seats</th>
-                <th>Economy Base Fare</th>
-                <th>Business Base Fare</th>
-                <th>Source</th>
-                <th>Destination</th>
-                <th>From Date</th>
-                <th>To Date</th>
-                <th>Departure Time</th>
-                <th>Arrival Time</th>
-                <th>Actions</th>
+                <th>F/N</th>
+                <th>T/S</th>
+                <th>EBF</th>
+                <th>BBF</th>
+                <th>FROM</th>
+                <th>TO</th>
+                <th>F/D</th>
+                <th>T/D</th>
+                <th>D/T</th>
+                <th>A/T</th>
+                <th>ACTIONS</th>
               </tr>
             </thead>
             <tbody>
@@ -118,7 +204,7 @@
                 <td>
                   <div class="d-flex justify-content-around">
                     <button class="btn btn-primary btn-sm me-2" (click)="editFlight(flight.id)" data-bs-toggle="modal" data-bs-target="#editFlightModal">Edit</button>
-                    <button class="btn btn-primary btn-sm me-2" (click)="editSchedulesBetweenDates(flight.id)" data-bs-toggle="modal" data-bs-target="#editScheduleModal">Re-schedule</button>
+                    <button class="btn btn-primary btn-sm me-2" (click)="editSchedulesBetweenDates(flight.id)" data-bs-toggle="modal" data-bs-target="#editScheduleModal">R/Sch</button>
                     <button class="btn btn-danger btn-sm" (click)="getCancelFlightId(flight.id)" data-bs-toggle="modal" data-bs-target="#cancelScheduleModal">Cancel</button>
                   </div>
                 </td>

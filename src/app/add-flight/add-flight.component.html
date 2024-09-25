@@ -9,7 +9,7 @@
 
   <form [formGroup]="flightForm" (ngSubmit)="onSubmit()">
     <!-- Flight Number and Airline ID -->
-    <div class="row mb-3 border p-3 rounded">
+    <!-- <div class="row mb-3 border p-3 rounded">
       <div class="col-md-6 mb-2">
         <label for="flight_no" class="form-label">Flight Number:</label>
         <input id="flight_no" formControlName="flightNo" type="text" class="form-control" />
@@ -21,20 +21,38 @@
         <label for="airline_name" class="form-label">Airline Name:</label>
         <input id="airline_name" type="text" class="form-control" [value]="airlineName" readonly />
       </div>
+    </div> -->
+    <div class="row mb-3 border p-3 rounded">
+      <div class="col-md-6 mb-2">
+        <label for="flight_no" class="form-label">Flight Number:</label>
+        <div class="input-group">
+          <span class="input-group-text">{{ getAirlineCode(airlineName) }}-</span> <!-- Airline code prefilled -->
+          <input id="flight_no" formControlName="flightNo" type="text" class="form-control" maxlength="4" placeholder="1234" />
+        </div>
+        <div *ngIf="flightForm.get('flightNo')?.invalid && flightForm.get('flightNo')?.touched" class="text-danger small">
+          Please enter a valid flight number (4 digits)
+        </div>
+      </div>
+      <div class="col-md-6 mb-2">
+        <label for="airline_name" class="form-label">Airline Name:</label>
+        <input id="airline_name" type="text" class="form-control" [value]="airlineName" readonly />
+      </div>
     </div>
+    
 
     <!-- Dates -->
     <div class="row mb-3 border p-3 rounded">
       <div class="col-md-6 mb-2">
         <label for="from_date" class="form-label">From Date:</label>
-        <input id="from_date" formControlName="fromDate" type="date" class="form-control" />
+        <input id="from_date" formControlName="fromDate" type="date" class="form-control"  [attr.min]="minDate
+        "/>
         <div *ngIf="flightForm.get('fromDate')?.invalid && flightForm.get('fromDate')?.touched" class="text-danger small">
           From date is required
         </div>
       </div>
       <div class="col-md-6 mb-2">
         <label for="to_date" class="form-label">To Date:</label>
-        <input id="to_date" formControlName="toDate" type="date" class="form-control" />
+        <input id="to_date" formControlName="toDate" type="date" class="form-control" [attr.min]="flightForm.value.fromDate" />
         <div *ngIf="flightForm.get('toDate')?.invalid && flightForm.get('toDate')?.touched" class="text-danger small">
           To date is required
         </div>
@@ -111,10 +129,6 @@
           Enter a valid number of business rows
         </div>
       </div>
-      <div class="col-md-4 mb-2">
-        <label for="aisle_charge" class="form-label">Aisle Charge:</label>
-        <input id="aisle_charge" formControlName="aisleCharge" type="number" class="form-control" />
-      </div>
     </div>
 
     <!-- Charges -->
@@ -126,6 +140,10 @@
       <div class="col-md-4 mb-2">
         <label for="middle_charge" class="form-label">Middle Charge:</label>
         <input id="middle_charge" formControlName="middleCharge" type="number" class="form-control" />
+      </div>
+      <div class="col-md-4 mb-2">
+        <label for="aisle_charge" class="form-label">Aisle Charge:</label>
+        <input id="aisle_charge" formControlName="aisleCharge" type="number" class="form-control" />
       </div>
     </div>
 

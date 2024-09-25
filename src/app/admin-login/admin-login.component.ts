@@ -37,11 +37,11 @@ export class AdminLoginComponent implements OnInit {
 
       this.http.post<any>(this.loginApiUrl, loginData).subscribe(
         (response) => {
-          if (response){
+          if (response !== -1){
             console.log(response);
             sessionStorage.setItem('adminId', response);
             sessionStorage.setItem('adminEmail', loginData.email);
-            this.router.navigate(['/admin/dashboard']);
+              this.router.navigate(['/admin/dashboard']);
           }
           else{
             this.errorMessage = 'Login failed. Please check your credentials.';
